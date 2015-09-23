@@ -22,6 +22,7 @@ class BusinessTableViewCell: UITableViewCell {
     super.awakeFromNib()
     
     layoutMargins = UIEdgeInsetsZero
+    separatorInset = UIEdgeInsetsZero
   }
   
   override func setSelected(selected: Bool, animated: Bool) {

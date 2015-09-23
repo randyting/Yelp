@@ -21,7 +21,9 @@ class SwitchTableViewCell: UITableViewCell {
   
   override func awakeFromNib() {
     super.awakeFromNib()
-    // Initialization code
+    
+    layoutMargins = UIEdgeInsetsZero
+    separatorInset = UIEdgeInsetsZero
   }
   
   override func setSelected(selected: Bool, animated: Bool) {
