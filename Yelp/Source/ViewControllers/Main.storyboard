@@ -121,6 +121,7 @@
                     <navigationItem key="navigationItem" id="INa-kh-VHS"/>
                     <connections>
                         <outlet property="businessesTableView" destination="oue-fR-74y" id="dPV-qY-IW7"/>
+                        <segue destination="dDJ-Wa-sYh" kind="modal" identifier="com.randy.FiltersViewSegue" id="m4Z-i2-lk6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -144,6 +145,68 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FIu-mQ-LbV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="425.06666666666666" y="981.69333333333327"/>
+        </scene>
+        <!--Filters View Controller-->
+        <scene sceneID="xfZ-Xc-JSA">
+            <objects>
+                <viewController id="0XI-Ev-Ptp" customClass="FiltersViewController" customModule="Yelp" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="mli-fg-ABQ"/>
+                        <viewControllerLayoutGuide type="bottom" id="uWr-bE-FF5"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="rdp-74-Kd0">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="77r-ld-kGc">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="com.randy.SwitchCell" id="KcY-tx-LOW">
+                                        <rect key="frame" x="0.0" y="92" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KcY-tx-LOW" id="G8k-gb-drS">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="77r-ld-kGc" secondAttribute="trailing" id="gde-MF-g35"/>
+                            <constraint firstItem="77r-ld-kGc" firstAttribute="leading" secondItem="rdp-74-Kd0" secondAttribute="leading" id="hF9-Ok-VMl"/>
+                            <constraint firstItem="77r-ld-kGc" firstAttribute="top" secondItem="rdp-74-Kd0" secondAttribute="top" id="jpo-fc-zSm"/>
+                            <constraint firstItem="uWr-bE-FF5" firstAttribute="top" secondItem="77r-ld-kGc" secondAttribute="bottom" id="wC1-ln-KGz"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="5Tl-eJ-kwj"/>
+                    <connections>
+                        <outlet property="filtersTableView" destination="77r-ld-kGc" id="Mg8-km-g2G"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2Ib-db-b5d" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1709" y="981"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="ork-q8-51w">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="dDJ-Wa-sYh" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="xUT-Sl-BVE">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="0XI-Ev-Ptp" kind="relationship" relationship="rootViewController" id="PPN-hc-5OC"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="U74-kY-MHE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1294" y="981"/>
         </scene>
     </scenes>
 </document>

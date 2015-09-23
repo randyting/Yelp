@@ -13,8 +13,14 @@ class BusinessesViewController: UIViewController{
   // MARK: - Constants
   
   let businessReusableCellIdentifier = "BusinessCell"
+  let filtersViewSegueIdentifier = "com.randy.FiltersViewSegue"
+  
+  // MARK: - Storyboard Objects
   
   @IBOutlet weak var businessesTableView: UITableView!
+  
+  // MARK: - Properties
+  
   var businesses: [Business]!
   let searchBar = UISearchBar()
   
@@ -72,7 +78,7 @@ class BusinessesViewController: UIViewController{
   // MARK: - Behavior
   
   func filterButtonClicked(sender: BusinessesViewController) {
-    print("Clicked filter button")
+    performSegueWithIdentifier(filtersViewSegueIdentifier, sender: self)
   }
   
   func searchForBusinesses() {
@@ -83,15 +89,18 @@ class BusinessesViewController: UIViewController{
       })
     })
   }
-  /*
+  
   // MARK: - Navigation
   
-  // In a storyboard-based application, you will often want to do a little preparation before navigation
+  
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-  // Get the new view controller using segue.destinationViewController.
-  // Pass the selected object to the new view controller.
+    if segue.identifier == filtersViewSegueIdentifier {
+      ((segue.destinationViewController as! UINavigationController).topViewController as! FiltersViewController).delegate = self
+    }
   }
-  */
+}
+
+extension BusinessesViewController: FiltersViewControllerDelegate {
   
 }
 
@@ -101,7 +110,7 @@ extension BusinessesViewController:  UITableViewDelegate, UITableViewDataSource 
     let cell = tableView.dequeueReusableCellWithIdentifier(businessReusableCellIdentifier, forIndexPath: indexPath) as! BusinessTableViewCell
     
     let business = businesses[indexPath.row]
-   
+    
     fillTableViewCellContent(cell, forBusiness: business)
     
     return cell
