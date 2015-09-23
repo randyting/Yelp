@@ -10,6 +10,10 @@ import UIKit
 
 class BusinessesViewController: UIViewController{
   
+  // MARK: - Constants
+  
+  let businessReusableCellIdentifier = "BusinessCell"
+  
   @IBOutlet weak var businessesTableView: UITableView!
   var businesses: [Business]!
   let searchBar = UISearchBar()
@@ -45,11 +49,24 @@ class BusinessesViewController: UIViewController{
   }
   
   func setupSearchBar(searchBar: UISearchBar) {
+    searchBar.sizeToFit()
     navigationItem.titleView = searchBar
   }
   
   func setupNavigationItem(navigationItem: UINavigationItem) {
     self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(title: "Filter", style: .Plain, target: self, action: "filterButtonClicked:")
+  }
+  
+  // MARK: - Content
+  
+  func fillTableViewCellContent(cell: BusinessTableViewCell, forBusiness business: Business) {
+    cell.businessImage.setImageWithURL(business.imageURL)
+    cell.businessNameLabel.text = business.name
+    cell.distanceLabel.text = business.distance
+    cell.ratingImage.setImageWithURL(business.ratingImageURL)
+    cell.addressLabel.text = business.address
+    cell.categoriesLabel.text = business.categories
+    
   }
   
   // MARK: - Behavior
@@ -81,11 +98,11 @@ class BusinessesViewController: UIViewController{
 extension BusinessesViewController:  UITableViewDelegate, UITableViewDataSource {
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("BusinessCell", forIndexPath: indexPath)
+    let cell = tableView.dequeueReusableCellWithIdentifier(businessReusableCellIdentifier, forIndexPath: indexPath) as! BusinessTableViewCell
     
     let business = businesses[indexPath.row]
-    
-    cell.textLabel!.text = business.name!
+   
+    fillTableViewCellContent(cell, forBusiness: business)
     
     return cell
   }
