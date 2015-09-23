@@ -37,7 +37,7 @@ class BusinessesViewController: UIViewController{
     super.viewDidLoad()
     
     setupTableView(businessesTableView)
-    searchForBusinesses()
+    searchForBusinessesWithFilter([String: AnyObject]())
   }
   
   override func didReceiveMemoryWarning() {
@@ -81,13 +81,19 @@ class BusinessesViewController: UIViewController{
     performSegueWithIdentifier(filtersViewSegueIdentifier, sender: self)
   }
   
-  func searchForBusinesses() {
-    Business.searchWithTerm("Thai", completion: { (businesses: [Business]!, error: NSError!) -> Void in
-      self.businesses = businesses
-      dispatch_async(dispatch_get_main_queue(), { () -> Void in
-        self.businessesTableView.reloadData()
-      })
-    })
+  func searchForBusinessesWithFilter(filter: [String:AnyObject]) {
+//    Business.searchWithTerm("Thai", completion: { (businesses: [Business]!, error: NSError!) -> Void in
+//      self.businesses = businesses
+//      dispatch_async(dispatch_get_main_queue(), { () -> Void in
+//        self.businessesTableView.reloadData()
+//      })
+//    })
+    Business.searchWithTerm("restaurants", sort: nil, categories: filter["categories"] as? [String], deals: nil) { (businesses: [Business]!, error: NSError!) -> Void in
+            self.businesses = businesses
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+              self.businessesTableView.reloadData()
+            })
+    }
   }
   
   // MARK: - Navigation
@@ -101,7 +107,9 @@ class BusinessesViewController: UIViewController{
 }
 
 extension BusinessesViewController: FiltersViewControllerDelegate {
-  
+  func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters filter: [String : AnyObject]) {
+    searchForBusinessesWithFilter(filter)
+  }
 }
 
 extension BusinessesViewController:  UITableViewDelegate, UITableViewDataSource {

@@ -10,7 +10,7 @@ import UIKit
 
 @objc protocol FiltersViewControllerDelegate {
   
-  optional func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters: [String:AnyObject])
+  optional func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters filter: [String:AnyObject])
   
 }
 
@@ -20,6 +20,7 @@ class FiltersViewController: UIViewController {
   
   let switchCellReuseIdentifier = "com.randy.SwitchCell"
   let categoriesJsonURL = NSURL(string: "https://s3-media2.fl.yelpcdn.com/assets/srv0/developer_pages/5e749b17ad6a/assets/json/categories.json")
+  let defaultsKeyForCategorySwitchStates = "com.randy.defaultsKeyForCategorySwitchStates"
   
   // MARK: - Storyboard Objects
   
@@ -30,6 +31,7 @@ class FiltersViewController: UIViewController {
   weak var delegate: FiltersViewControllerDelegate?
   var categories = [[String:String]]()
   var filters = [String:AnyObject]()
+  var categorySwitchStates: [Int:Bool]?
   
   // MARK: - Lifecycle
   
@@ -42,6 +44,7 @@ class FiltersViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    loadPersistentData()
     setupTableView(filtersTableView)
     getRestaurantCategoriesfromJsonURL(categoriesJsonURL!)
     
@@ -93,6 +96,23 @@ class FiltersViewController: UIViewController {
     task.resume()
   }
   
+  func loadPersistentData() {
+    let defaults = NSUserDefaults.standardUserDefaults()
+    if let switchStates = defaults.objectForKey(defaultsKeyForCategorySwitchStates){
+      let switchStatesData = NSKeyedUnarchiver.unarchiveObjectWithData(switchStates as! NSData) as? [Int: Bool]
+      categorySwitchStates = switchStatesData
+    } else {
+      categorySwitchStates = [Int:Bool]()
+    }
+    defaults.synchronize()
+  }
+  
+  func savePersistentData() {
+    let defaults = NSUserDefaults.standardUserDefaults()
+    defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(categorySwitchStates!) , forKey: defaultsKeyForCategorySwitchStates)
+    defaults.synchronize()
+  }
+  
   // MARK: - Behavior
   
   func onCancelButtonTapped(sender: UIBarButtonItem) {
@@ -103,11 +123,26 @@ class FiltersViewController: UIViewController {
   
   func onSearchButtonTapped(sender: UIBarButtonItem) {
     
+    filters["categories"] = getSelectedCategoriesForCategorySwitchStates(categorySwitchStates!)
+    savePersistentData()
+    
     delegate?.filtersViewController?(self, didUpdateFilters: filters)
     self.dismissViewControllerAnimated(true) { () -> Void in
       // Do nothing
     }
-
+    
+  }
+  
+  // MARK: - Helper
+  
+  func getSelectedCategoriesForCategorySwitchStates(switchStates: [Int:Bool]) -> [String] {
+    var categoriesToFilter = [String]()
+    for (row, state) in switchStates {
+      if state {
+        categoriesToFilter.append(categories[row]["code"]!)
+      }
+    }
+    return categoriesToFilter
   }
   
   // MARK: - Navigation
@@ -148,7 +183,7 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath)
+    let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
     
     switch FiltersSection(rawValue: indexPath.section)! {
     case .Deals:
@@ -158,7 +193,9 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
     case .SortBy:
       cell.textLabel!.text = "sortBy"
     case .Categories:
-      cell.textLabel!.text = categories[indexPath.row]["name"]
+      cell.selectSwitch.on = categorySwitchStates?[indexPath.row] ?? false
+      cell.categoryLabel.text = categories[indexPath.row]["name"]
+      cell.delegate = self
     case .count:
       assert(true, "Attempted to access FiltersSection out of bounds.")
     }
@@ -189,5 +226,13 @@ extension FiltersViewController {
       }
     }
     
+  }
+}
+
+extension FiltersViewController: SwitchTableViewCellDelegate {
+  func switchTableViewCell(switchTableViewCell: SwitchTableViewCell, switchValueChangedTo: Bool) {
+    let row = filtersTableView.indexPathForCell(switchTableViewCell)?.row
+    
+    categorySwitchStates![row!] = switchValueChangedTo
   }
 }
