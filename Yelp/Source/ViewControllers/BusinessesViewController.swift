@@ -37,7 +37,7 @@ class BusinessesViewController: UIViewController{
     super.viewDidLoad()
     
     setupTableView(businessesTableView)
-    searchForBusinessesWithFilter([String: AnyObject]())
+    searchForBusinessesWithFilter(Filter())
   }
   
   override func didReceiveMemoryWarning() {
@@ -69,14 +69,16 @@ class BusinessesViewController: UIViewController{
     performSegueWithIdentifier(filtersViewSegueIdentifier, sender: self)
   }
   
-  func searchForBusinessesWithFilter(filter: [String:AnyObject]) {
+  func searchForBusinessesWithFilter(filter: Filter) {
 //    Business.searchWithTerm("Thai", completion: { (businesses: [Business]!, error: NSError!) -> Void in
 //      self.businesses = businesses
 //      dispatch_async(dispatch_get_main_queue(), { () -> Void in
 //        self.businessesTableView.reloadData()
 //      })
 //    })
-    Business.searchWithTerm("restaurants", sort: nil, categories: filter["categories"] as? [String], deals: nil) { (businesses: [Business]!, error: NSError!) -> Void in
+    
+    
+    Business.searchWithTerm("restaurants", sort: filter.sort, categories: filter.categories, deals: filter.deals) { (businesses: [Business]!, error: NSError!) -> Void in
             self.businesses = businesses
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
               self.businessesTableView.reloadData()
@@ -94,8 +96,10 @@ class BusinessesViewController: UIViewController{
   }
 }
 
+  // MARK: - Delegate Methods
+
 extension BusinessesViewController: FiltersViewControllerDelegate {
-  func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters filter: [String : AnyObject]) {
+  func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters filter: Filter) {
     searchForBusinessesWithFilter(filter)
   }
 }

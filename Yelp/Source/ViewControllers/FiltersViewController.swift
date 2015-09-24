@@ -8,9 +8,11 @@
 
 import UIKit
 
+  // MARK: - Protocol
+
 @objc protocol FiltersViewControllerDelegate {
   
-  optional func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters filter: [String:AnyObject])
+  optional func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters filter: Filter)
   
 }
 
@@ -30,7 +32,7 @@ class FiltersViewController: UIViewController {
   
   weak var delegate: FiltersViewControllerDelegate?
   var categories = [[String:String]]()
-  var filters = [String:AnyObject]()
+  var filter = Filter()
   var categorySwitchStates: [Int:Bool]?
   
   // MARK: - Lifecycle
@@ -123,10 +125,10 @@ class FiltersViewController: UIViewController {
   
   func onSearchButtonTapped(sender: UIBarButtonItem) {
     
-    filters["categories"] = getSelectedCategoriesForCategorySwitchStates(categorySwitchStates!)
+    filter.categories = getSelectedCategoriesForCategorySwitchStates(categorySwitchStates!)
     savePersistentData()
     
-    delegate?.filtersViewController?(self, didUpdateFilters: filters)
+    delegate?.filtersViewController?(self, didUpdateFilters: filter)
     self.dismissViewControllerAnimated(true) { () -> Void in
       // Do nothing
     }
@@ -205,6 +207,8 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
   
 }
 
+  // MARK: - Types
+
 extension FiltersViewController {
   
   enum FiltersSection : Int {
@@ -225,9 +229,12 @@ extension FiltersViewController {
         return "Out of bounds"
       }
     }
-    
   }
+  
 }
+
+
+  // MARK: - Delegate Methods
 
 extension FiltersViewController: SwitchTableViewCellDelegate {
   func switchTableViewCell(switchTableViewCell: SwitchTableViewCell, switchValueChangedTo: Bool) {
