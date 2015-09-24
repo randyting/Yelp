@@ -63,18 +63,6 @@ class BusinessesViewController: UIViewController{
     self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(title: "Filter", style: .Plain, target: self, action: "filterButtonClicked:")
   }
   
-  // MARK: - Content
-  
-  func fillTableViewCellContent(cell: BusinessTableViewCell, forBusiness business: Business) {
-    cell.businessImage.setImageWithURL(business.imageURL)
-    cell.businessNameLabel.text = business.name
-    cell.distanceLabel.text = business.distance
-    cell.ratingImage.setImageWithURL(business.ratingImageURL)
-    cell.addressLabel.text = business.address
-    cell.categoriesLabel.text = business.categories
-    
-  }
-  
   // MARK: - Behavior
   
   func filterButtonClicked(sender: BusinessesViewController) {
@@ -117,9 +105,7 @@ extension BusinessesViewController:  UITableViewDelegate, UITableViewDataSource 
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCellWithIdentifier(businessReusableCellIdentifier, forIndexPath: indexPath) as! BusinessTableViewCell
     
-    let business = businesses[indexPath.row]
-    
-    fillTableViewCellContent(cell, forBusiness: business)
+    cell.business = businesses[indexPath.row]
     
     return cell
   }
