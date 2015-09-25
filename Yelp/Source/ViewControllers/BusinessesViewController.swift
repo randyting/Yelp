@@ -26,6 +26,8 @@ class BusinessesViewController: UIViewController{
   var searchedBusinesses: [Business]!
   var searchController: UISearchController!
   var searchBar: UISearchBar!
+  var currentFilter = Filter()
+  var newBusinessCount: Int = 0
   
   // MARK: - Lifecycle
   
@@ -41,8 +43,9 @@ class BusinessesViewController: UIViewController{
     super.viewDidLoad()
     
     setupChangeTableViewFrameWhenKeyboardIsShownOrHides()
+    
+    searchForBusinessesWithFilter(currentFilter)
     setupTableView(businessesTableView)
-    searchForBusinessesWithFilter(Filter())
   }
   
   override func didReceiveMemoryWarning() {
@@ -130,9 +133,22 @@ class BusinessesViewController: UIViewController{
   
   func searchForBusinessesWithFilter(filter: Filter) {
     
-    Business.searchWithTerm("restaurants", sort: filter.sort, categories: filter.categories, deals: filter.deals, radius: filter.radius) { (businesses: [Business]!, error: NSError!) -> Void in
+    Business.searchWithTerm("restaurants", sort: filter.sort, categories: filter.categories, deals: filter.deals, radius: filter.radius, limit: nil, offset: nil) { (businesses: [Business]!, error: NSError!) -> Void in
       self.businesses = businesses
       self.searchedBusinesses = businesses
+      self.newBusinessCount = businesses.count
+      dispatch_async(dispatch_get_main_queue(), { () -> Void in
+        self.businessesTableView.reloadData()
+      })
+    }
+  }
+  
+  func loadMorePagesWithFilter(filter: Filter) {
+    
+    newBusinessCount = businesses.count + 20
+    Business.searchWithTerm("restaurants", sort: filter.sort, categories: filter.categories, deals: filter.deals, radius: filter.radius, limit: 20, offset: businesses.count) { (businesses: [Business]!, error: NSError!) -> Void in
+      self.businesses?.appendContentsOf(businesses)
+      self.searchedBusinesses = self.searchBusinessesWithSearchText(self.searchBar.text!)
       dispatch_async(dispatch_get_main_queue(), { () -> Void in
         self.businessesTableView.reloadData()
       })
@@ -143,8 +159,15 @@ class BusinessesViewController: UIViewController{
   
   func searchBusinessesWithSearchText(searchText: String) -> [Business] {
     
-    let pred =  NSPredicate(format: "name CONTAINS[c] %@", searchText)
-    let foundBusinesses = businesses.filter({ pred.evaluateWithObject($0)})
+    var foundBusinesses: [Business]
+    
+    if searchText != "" {
+      let pred =  NSPredicate(format: "name CONTAINS[c] %@", searchText)
+      foundBusinesses = businesses.filter({ pred.evaluateWithObject($0)})
+    } else {
+      foundBusinesses = businesses
+    }
+    
     
     return foundBusinesses
   }
@@ -166,6 +189,7 @@ class BusinessesViewController: UIViewController{
 extension BusinessesViewController: FiltersViewControllerDelegate {
   func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters filter: Filter) {
     searchForBusinessesWithFilter(filter)
+    currentFilter = filter
   }
 }
 
@@ -186,6 +210,20 @@ extension BusinessesViewController:  UITableViewDelegate, UITableViewDataSource 
     return 0
   }
   
+}
+
+extension BusinessesViewController: UIScrollViewDelegate{
+  
+  func scrollViewDidScroll(scrollView: UIScrollView) {
+    let currentOffset = scrollView.contentOffset.y
+    let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height
+    
+    if (maximumOffset - currentOffset) <= 1500 && (maximumOffset - currentOffset) >= -100 {
+      if newBusinessCount == businesses.count && searchBar.text?.characters.count == 0 {
+        loadMorePagesWithFilter(currentFilter)
+      }
+    }
+  }
 }
 
 extension BusinessesViewController: UISearchResultsUpdating{
