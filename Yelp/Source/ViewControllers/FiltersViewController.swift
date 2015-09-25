@@ -128,6 +128,7 @@ class FiltersViewController: UIViewController {
     
     filter.categories = getSelectedCategoriesForSwitchStates(switchStates!)
     filter.sort = getSelectedSortByForSwitchStates(switchStates!)
+    filter.deals = getSelectedDealsFilterForSwitchStates(switchStates!)
     savePersistentData()
     
     delegate?.filtersViewController?(self, didUpdateFilters: filter)
@@ -193,6 +194,12 @@ class FiltersViewController: UIViewController {
     return sortMode
   }
   
+  func getSelectedDealsFilterForSwitchStates(switchStates: [NSIndexPath:Bool]) -> Bool? {
+    
+    return switchStates[NSIndexPath(forRow: 0, inSection: FiltersSection.Deals.rawValue)]!
+    
+  }
+  
   // MARK: - Navigation
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -236,6 +243,7 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
     case .Deals:
       let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
       cell.switchLabel.text = "deals"
+      cell.selectSwitch.on = switchStates?[indexPath] ?? false
       return cell
     case .Distance:
       let cell = filtersTableView.dequeueReusableCellWithIdentifier(buttonCellReuseIdentifier, forIndexPath: indexPath) as! ButtonTableViewCell
