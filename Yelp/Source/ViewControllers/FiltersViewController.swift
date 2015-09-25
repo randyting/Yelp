@@ -153,7 +153,6 @@ class FiltersViewController: UIViewController {
       if indexPath.section == selectedIndexPath?.section{
         if indexPath.row == selectedIndexPath?.row {
           switchStates![indexPath] = true
-                  print((indexPath.row))
         } else {
           switchStates![indexPath] = false
         }
@@ -209,8 +208,6 @@ class FiltersViewController: UIViewController {
   }
   
   func getSelectedDealsFilterForSwitchStates(switchStates: [NSIndexPath:Bool]) -> Bool? {
-    
-    print((switchStates[NSIndexPath(forRow: 0, inSection: FiltersSection.Deals.rawValue)] ?? false))
     
     return switchStates[NSIndexPath(forRow: 0, inSection: FiltersSection.Deals.rawValue)] ?? false
   
