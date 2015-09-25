@@ -13,5 +13,6 @@ class Filter: NSObject {
   var sort: YelpSortMode?
   var categories: [String]?
   var deals: Bool?
+  var radius: Int?
   
 }

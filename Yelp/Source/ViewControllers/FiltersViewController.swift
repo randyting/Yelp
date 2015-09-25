@@ -129,6 +129,7 @@ class FiltersViewController: UIViewController {
     filter.categories = getSelectedCategoriesForSwitchStates(switchStates!)
     filter.sort = getSelectedSortByForSwitchStates(switchStates!)
     filter.deals = getSelectedDealsFilterForSwitchStates(switchStates!)
+    filter.radius = getSelectedRadiusForSwitchStates(switchStates!)
     savePersistentData()
     
     delegate?.filtersViewController?(self, didUpdateFilters: filter)
@@ -160,13 +161,12 @@ class FiltersViewController: UIViewController {
       }
     }
     
-    
     filtersTableView.reloadData()
     
   }
   
   
-  // MARK: - Helper
+  // MARK: - Parsers
   
   func getSelectedCategoriesForSwitchStates(switchStates: [NSIndexPath:Bool]) -> [String] {
     var categoriesToFilter = [String]()
@@ -194,9 +194,26 @@ class FiltersViewController: UIViewController {
     return sortMode
   }
   
+  func getSelectedRadiusForSwitchStates(switchStates: [NSIndexPath:Bool]) -> Int {
+    var radius = RadiusSection.Miles5.radiusInMeters()
+    
+    for (indexPath, state) in switchStates {
+      if (indexPath.section == FiltersSection.Radius.rawValue){
+        if state {
+          radius = RadiusSection(rawValue: indexPath.row)!.radiusInMeters()
+        }
+      }
+    }
+    
+    return radius
+  }
+  
   func getSelectedDealsFilterForSwitchStates(switchStates: [NSIndexPath:Bool]) -> Bool? {
     
-    return switchStates[NSIndexPath(forRow: 0, inSection: FiltersSection.Deals.rawValue)]!
+    print((switchStates[NSIndexPath(forRow: 0, inSection: FiltersSection.Deals.rawValue)] ?? false))
+    
+    return switchStates[NSIndexPath(forRow: 0, inSection: FiltersSection.Deals.rawValue)] ?? false
+  
     
   }
   
@@ -206,8 +223,6 @@ class FiltersViewController: UIViewController {
     // Get the new view controller using segue.destinationViewController.
     // Pass the selected object to the new view controller.
   }
-  
-  
 }
 
 extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
@@ -225,8 +240,8 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
     switch FiltersSection(rawValue: section)! {
     case .Deals:
       return 1
-    case .Distance:
-      return 1
+    case .Radius:
+      return RadiusSection.count.rawValue
     case .SortBy:
       return YelpSortMode.count.rawValue
     case .Categories:
@@ -244,10 +259,12 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
       let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
       cell.switchLabel.text = "deals"
       cell.selectSwitch.on = switchStates?[indexPath] ?? false
+      cell.delegate = self
       return cell
-    case .Distance:
+    case .Radius:
       let cell = filtersTableView.dequeueReusableCellWithIdentifier(buttonCellReuseIdentifier, forIndexPath: indexPath) as! ButtonTableViewCell
-      cell.buttonLabel.text = "distance"
+      cell.buttonLabel.text = RadiusSection(rawValue: indexPath.row)?.title()
+      cell.on = switchStates?[indexPath] ?? false
       return cell
     case .SortBy:
       let cell = filtersTableView.dequeueReusableCellWithIdentifier(buttonCellReuseIdentifier, forIndexPath: indexPath) as! ButtonTableViewCell
@@ -275,11 +292,11 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
 extension FiltersViewController {
   
   enum FiltersSection : Int {
-    case Deals, Distance, SortBy, Categories, count
+    case Deals, Radius, SortBy, Categories, count
     
     static let titles = [
       Deals: "Deals",
-      Distance: "Distance",
+      Radius: "Distance",
       SortBy: "Sort By",
       Categories: "Categories"
     ]
@@ -290,6 +307,42 @@ extension FiltersViewController {
       } else {
         assert(true, "Attempted to access FiltersSection out of bounds.")
         return "Out of bounds"
+      }
+    }
+  }
+  
+  enum RadiusSection : Int {
+    case Miles0_5, Mile1, Miles5, Miles20, count
+    
+    static let titles = [
+      Miles0_5: "0.5 Miles",
+      Mile1: "1 Mile",
+      Miles5: "5 Miles",
+      Miles20: "20 Miles"
+    ]
+    
+    static let radiiInMeters = [
+      Miles0_5: 805,
+      Mile1: 1609,
+      Miles5: 8047,
+      Miles20: 32187
+    ]
+    
+    func title() -> String {
+      if let title = RadiusSection.titles[self] {
+        return title
+      } else {
+        assert(true, "Attempted to access RadiusSection out of bounds.")
+        return "Out of bounds"
+      }
+    }
+    
+    func radiusInMeters() -> Int {
+      if let radiusInMeters = RadiusSection.radiiInMeters[self] {
+        return radiusInMeters
+      } else {
+        assert(true, "Attempted to access RadiusSection out of bounds.")
+        return 0
       }
     }
   }

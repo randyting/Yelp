@@ -71,7 +71,7 @@ class BusinessesViewController: UIViewController{
   
   func searchForBusinessesWithFilter(filter: Filter) {
     
-    Business.searchWithTerm("restaurants", sort: filter.sort, categories: filter.categories, deals: filter.deals) { (businesses: [Business]!, error: NSError!) -> Void in
+    Business.searchWithTerm("restaurants", sort: filter.sort, categories: filter.categories, deals: filter.deals, radius: filter.radius) { (businesses: [Business]!, error: NSError!) -> Void in
             self.businesses = businesses
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
               self.businessesTableView.reloadData()
