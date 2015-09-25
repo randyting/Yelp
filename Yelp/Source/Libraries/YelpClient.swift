@@ -18,7 +18,7 @@ enum YelpSortMode: Int {
   case BestMatched = 0, Distance, HighestRated, count
   
   static let titles = [
-    BestMatched: "Best Matched",
+    BestMatched: "Best Match",
     Distance: "Distance",
     HighestRated: "Highest Rated"
   ]

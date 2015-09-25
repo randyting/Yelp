@@ -222,68 +222,6 @@ class FiltersViewController: UIViewController {
   }
 }
 
-extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
-  
-  func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-    return FiltersSection.count.rawValue
-  }
-  
-  func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    return FiltersSection(rawValue: section)?.title()
-  }
-  
-  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    
-    switch FiltersSection(rawValue: section)! {
-    case .Deals:
-      return 1
-    case .Radius:
-      return RadiusSection.count.rawValue
-    case .SortBy:
-      return YelpSortMode.count.rawValue
-    case .Categories:
-      return categories.count
-    case .count:
-      assert(true, "Attempted to access FiltersSection out of bounds.")
-    }
-    return 0
-  }
-  
-  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    
-    switch FiltersSection(rawValue: indexPath.section)! {
-    case .Deals:
-      let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
-      cell.switchLabel.text = "deals"
-      cell.selectSwitch.on = switchStates?[indexPath] ?? false
-      cell.delegate = self
-      return cell
-    case .Radius:
-      let cell = filtersTableView.dequeueReusableCellWithIdentifier(buttonCellReuseIdentifier, forIndexPath: indexPath) as! ButtonTableViewCell
-      cell.buttonLabel.text = RadiusSection(rawValue: indexPath.row)?.title()
-      cell.on = switchStates?[indexPath] ?? false
-      return cell
-    case .SortBy:
-      let cell = filtersTableView.dequeueReusableCellWithIdentifier(buttonCellReuseIdentifier, forIndexPath: indexPath) as! ButtonTableViewCell
-      cell.buttonLabel.text = YelpSortMode(rawValue: indexPath.row)?.title()
-      cell.on = switchStates?[indexPath] ?? false
-      return cell
-    case .Categories:
-      let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
-      cell.selectSwitch.on = switchStates?[indexPath] ?? false
-      cell.switchLabel.text = categories[indexPath.row]["name"]
-      cell.delegate = self
-      return cell
-    case .count:
-      let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
-      assert(true, "Attempted to access FiltersSection out of bounds.")
-      return cell
-    }
-    
-  }
-  
-}
-
 // MARK: - Types
 
 extension FiltersViewController {
@@ -292,7 +230,7 @@ extension FiltersViewController {
     case Deals, Radius, SortBy, Categories, count
     
     static let titles = [
-      Deals: "Deals",
+      Deals: "",
       Radius: "Distance",
       SortBy: "Sort By",
       Categories: "Categories"
@@ -309,9 +247,10 @@ extension FiltersViewController {
   }
   
   enum RadiusSection : Int {
-    case Miles0_5, Mile1, Miles5, Miles20, count
+    case BestMatch, Miles0_5, Mile1, Miles5, Miles20, count
     
     static let titles = [
+      BestMatch: "Best Match",
       Miles0_5: "0.5 Miles",
       Mile1: "1 Mile",
       Miles5: "5 Miles",
@@ -319,6 +258,7 @@ extension FiltersViewController {
     ]
     
     static let radiiInMeters = [
+      BestMatch: 40000,
       Miles0_5: 805,
       Mile1: 1609,
       Miles5: 8047,
@@ -354,5 +294,70 @@ extension FiltersViewController: SwitchTableViewCellDelegate {
     let indexPath = filtersTableView.indexPathForCell(switchTableViewCell)
     
     switchStates![indexPath!] = switchValueChangedTo
+  }
+}
+
+extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
+  
+  func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    return FiltersSection.count.rawValue
+  }
+  
+  func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    return FiltersSection(rawValue: section)?.title()
+  }
+  
+  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    switch FiltersSection(rawValue: section)! {
+    case .Deals:
+      return 1
+    case .Radius:
+      return RadiusSection.count.rawValue
+    case .SortBy:
+      return YelpSortMode.count.rawValue
+    case .Categories:
+      return categories.count
+    case .count:
+      assert(true, "Attempted to access FiltersSection out of bounds.")
+    }
+    return 0
+  }
+  
+  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    
+    switch FiltersSection(rawValue: indexPath.section)! {
+    case .Deals:
+      let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
+      cell.switchLabel.text = "Offering a Deal"
+      cell.selectSwitch.on = switchStates?[indexPath] ?? false
+      cell.delegate = self
+      return cell
+    case .Radius:
+      let cell = filtersTableView.dequeueReusableCellWithIdentifier(buttonCellReuseIdentifier, forIndexPath: indexPath) as! ButtonTableViewCell
+      cell.buttonLabel.text = RadiusSection(rawValue: indexPath.row)?.title()
+      cell.on = switchStates?[indexPath] ?? false
+      return cell
+    case .SortBy:
+      let cell = filtersTableView.dequeueReusableCellWithIdentifier(buttonCellReuseIdentifier, forIndexPath: indexPath) as! ButtonTableViewCell
+      cell.buttonLabel.text = YelpSortMode(rawValue: indexPath.row)?.title()
+      cell.on = switchStates?[indexPath] ?? false
+      return cell
+    case .Categories:
+      let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
+      cell.selectSwitch.on = switchStates?[indexPath] ?? false
+      cell.switchLabel.text = categories[indexPath.row]["name"]
+      cell.delegate = self
+      return cell
+    case .count:
+      let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
+      assert(true, "Attempted to access FiltersSection out of bounds.")
+      return cell
+    }
+    
+  }
+  
+  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    tableView.deselectRowAtIndexPath(indexPath, animated: true)
   }
 }
