@@ -126,7 +126,8 @@ class FiltersViewController: UIViewController {
   
   func onSearchButtonTapped(sender: UIBarButtonItem) {
     
-    filter.categories = getSelectedCategoriesForCategorySwitchStates(switchStates!)
+    filter.categories = getSelectedCategoriesForSwitchStates(switchStates!)
+    filter.sort = getSelectedSortByForSwitchStates(switchStates!)
     savePersistentData()
     
     delegate?.filtersViewController?(self, didUpdateFilters: filter)
@@ -166,7 +167,7 @@ class FiltersViewController: UIViewController {
   
   // MARK: - Helper
   
-  func getSelectedCategoriesForCategorySwitchStates(switchStates: [NSIndexPath:Bool]) -> [String] {
+  func getSelectedCategoriesForSwitchStates(switchStates: [NSIndexPath:Bool]) -> [String] {
     var categoriesToFilter = [String]()
     for (indexPath, state) in switchStates {
       if (indexPath.section == FiltersSection.Categories.rawValue){
@@ -176,6 +177,20 @@ class FiltersViewController: UIViewController {
       }
     }
     return categoriesToFilter
+  }
+  
+  func getSelectedSortByForSwitchStates(switchStates: [NSIndexPath:Bool]) -> YelpSortMode {
+    var sortMode = YelpSortMode.BestMatched
+    
+    for (indexPath, state) in switchStates {
+      if (indexPath.section == FiltersSection.SortBy.rawValue){
+        if state {
+          sortMode = YelpSortMode(rawValue: indexPath.row)!
+        }
+      }
+    }
+  
+    return sortMode
   }
   
   // MARK: - Navigation
