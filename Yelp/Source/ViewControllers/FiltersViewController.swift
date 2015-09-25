@@ -8,7 +8,7 @@
 
 import UIKit
 
-  // MARK: - Protocol
+// MARK: - Protocol
 
 @objc protocol FiltersViewControllerDelegate {
   
@@ -21,6 +21,7 @@ class FiltersViewController: UIViewController {
   // MARK: - Constants
   
   let switchCellReuseIdentifier = "com.randy.SwitchCell"
+  let buttonCellReuseIdentifier = "com.randy.ButtonCell"
   let categoriesJsonURL = NSURL(string: "https://s3-media2.fl.yelpcdn.com/assets/srv0/developer_pages/5e749b17ad6a/assets/json/categories.json")
   let defaultsKeyForSwitchStates = "com.randy.defaultsKeyForSwitchStates"
   
@@ -135,6 +136,34 @@ class FiltersViewController: UIViewController {
     
   }
   
+  @IBAction func buttonPressed(sender: UIButton) {
+    let selectedIndexPath = filtersTableView.indexPathForCell(sender.superview?.superview as! UITableViewCell)
+    
+    if switchStates![selectedIndexPath!] == nil {
+      for var row = 0; row < filtersTableView.numberOfRowsInSection((selectedIndexPath?.section)!); row++ {
+        let modifyingIndexPath = NSIndexPath(forRow: row, inSection: (selectedIndexPath?.section)!)
+        switchStates![modifyingIndexPath] = false
+      }
+    }
+    
+    for (indexPath, _) in switchStates! {
+      if indexPath.section == selectedIndexPath?.section{
+        if indexPath.row == selectedIndexPath?.row {
+          switchStates![indexPath] = true
+                  print((indexPath.row))
+        } else {
+          switchStates![indexPath] = false
+        }
+
+      }
+    }
+    
+    
+    filtersTableView.reloadData()
+    
+  }
+  
+  
   // MARK: - Helper
   
   func getSelectedCategoriesForCategorySwitchStates(switchStates: [NSIndexPath:Bool]) -> [String] {
@@ -177,7 +206,7 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
     case .Distance:
       return 1
     case .SortBy:
-      return 1
+      return YelpSortMode.count.rawValue
     case .Categories:
       return categories.count
     case .count:
@@ -187,29 +216,38 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
     
     switch FiltersSection(rawValue: indexPath.section)! {
     case .Deals:
-      cell.textLabel!.text = "deals"
+      let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
+      cell.switchLabel.text = "deals"
+      return cell
     case .Distance:
-      cell.textLabel!.text = "distance"
+      let cell = filtersTableView.dequeueReusableCellWithIdentifier(buttonCellReuseIdentifier, forIndexPath: indexPath) as! ButtonTableViewCell
+      cell.buttonLabel.text = "distance"
+      return cell
     case .SortBy:
-      cell.textLabel!.text = "sortBy"
+      let cell = filtersTableView.dequeueReusableCellWithIdentifier(buttonCellReuseIdentifier, forIndexPath: indexPath) as! ButtonTableViewCell
+      cell.buttonLabel.text = YelpSortMode(rawValue: indexPath.row)?.title()
+      cell.on = switchStates?[indexPath] ?? false
+      return cell
     case .Categories:
+      let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
       cell.selectSwitch.on = switchStates?[indexPath] ?? false
-      cell.categoryLabel.text = categories[indexPath.row]["name"]
+      cell.switchLabel.text = categories[indexPath.row]["name"]
       cell.delegate = self
+      return cell
     case .count:
+      let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
       assert(true, "Attempted to access FiltersSection out of bounds.")
+      return cell
     }
     
-    return cell
   }
   
 }
 
-  // MARK: - Types
+// MARK: - Types
 
 extension FiltersViewController {
   
@@ -236,7 +274,7 @@ extension FiltersViewController {
 }
 
 
-  // MARK: - Delegate Methods
+// MARK: - Delegate Methods
 
 extension FiltersViewController: SwitchTableViewCellDelegate {
   func switchTableViewCell(switchTableViewCell: SwitchTableViewCell, switchValueChangedTo: Bool) {

@@ -17,7 +17,8 @@ class SwitchTableViewCell: UITableViewCell {
   weak var delegate: AnyObject?
 
   @IBOutlet weak var selectSwitch: UISwitch!
-  @IBOutlet weak var categoryLabel: UILabel!
+
+  @IBOutlet weak var switchLabel: UILabel!
   
   override func awakeFromNib() {
     super.awakeFromNib()
@@ -34,7 +35,7 @@ class SwitchTableViewCell: UITableViewCell {
   
   override func prepareForReuse() {
     self.textLabel!.text = ""
-    self.categoryLabel.text = ""
+    self.switchLabel.text = ""
   }
   
   @IBAction func onSwitchValueChanged(sender: AnyObject) {
