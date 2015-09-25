@@ -121,6 +121,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="INa-kh-VHS"/>
                     <connections>
+                        <outlet property="businessTableViewBottomToSuperConstraint" destination="xZX-Vy-oX0" id="0vn-R8-Xfx"/>
                         <outlet property="businessesTableView" destination="oue-fR-74y" id="dPV-qY-IW7"/>
                         <segue destination="dDJ-Wa-sYh" kind="modal" identifier="com.randy.FiltersViewSegue" id="m4Z-i2-lk6"/>
                     </connections>

@@ -18,24 +18,29 @@ class BusinessesViewController: UIViewController{
   // MARK: - Storyboard Objects
   
   @IBOutlet weak var businessesTableView: UITableView!
+  @IBOutlet weak var businessTableViewBottomToSuperConstraint: NSLayoutConstraint!
   
   // MARK: - Properties
   
   var businesses: [Business]!
-  let searchBar = UISearchBar()
+  var searchedBusinesses: [Business]!
+  var searchController: UISearchController!
+  var searchBar: UISearchBar!
   
   // MARK: - Lifecycle
   
   override func loadView() {
     super.loadView()
     
-    setupSearchBar(searchBar)
+    //    setupSearchController()
+    setupSearchBar()
     setupNavigationItem(navigationItem)
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    setupChangeTableViewFrameWhenKeyboardIsShownOrHides()
     setupTableView(businessesTableView)
     searchForBusinessesWithFilter(Filter())
   }
@@ -46,6 +51,20 @@ class BusinessesViewController: UIViewController{
   
   // MARK: - Initialization
   
+  func setupChangeTableViewFrameWhenKeyboardIsShownOrHides(){
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "willShowKeyboard:", name: UIKeyboardDidShowNotification, object: nil)
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "willHideKeyboard:", name: UIKeyboardDidHideNotification, object: nil)
+  }
+  
+  func setupSearchBar() {
+    searchBar = UISearchBar()
+    searchBar.delegate = self
+    searchBar.placeholder = "Restaurant"
+    searchBar.sizeToFit()
+    searchBar.returnKeyType = UIReturnKeyType.Done
+    navigationItem.titleView = searchBar
+  }
+  
   func setupTableView(tableView: UITableView!) {
     tableView.delegate = self
     tableView.dataSource = self
@@ -54,9 +73,14 @@ class BusinessesViewController: UIViewController{
     
   }
   
-  func setupSearchBar(searchBar: UISearchBar) {
-    searchBar.sizeToFit()
-    navigationItem.titleView = searchBar
+  func setupSearchController() {
+    searchController = UISearchController(searchResultsController: nil)
+    searchController.searchResultsUpdater = self
+    searchController.dimsBackgroundDuringPresentation = false
+    searchController.searchBar.sizeToFit()
+    navigationItem.titleView = searchController.searchBar
+    definesPresentationContext = true
+    
   }
   
   func setupNavigationItem(navigationItem: UINavigationItem) {
@@ -65,6 +89,41 @@ class BusinessesViewController: UIViewController{
   
   // MARK: - Behavior
   
+  func willShowKeyboard(notification: NSNotification) {
+    if let userInfo = notification.userInfo {
+      let kbSize = ((userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue().size)!
+      let durationValue = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)!
+      let animationDuration = durationValue.doubleValue
+      let curveValue = (userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber)!
+      let animationCurve = curveValue.integerValue
+      
+      UIView.animateWithDuration(animationDuration,
+        delay: 0.0,
+        options: UIViewAnimationOptions(rawValue: UInt(animationCurve) << 16),
+        animations: { () -> Void in
+          self.businessesTableView.frame = CGRectMake(0, 0, self.businessesTableView.frame.size.width, self.businessesTableView.frame.size.height - kbSize.height)
+          self.searchBar.showsCancelButton = true
+        }, completion: nil)
+    }
+  }
+  
+  func willHideKeyboard(notification: NSNotification) {
+    if let userInfo = notification.userInfo {
+      let durationValue = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)!
+      let animationDuration = durationValue.doubleValue
+      let curveValue = (userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber)!
+      let animationCurve = curveValue.integerValue
+      
+      UIView.animateWithDuration(animationDuration,
+        delay: 0.0,
+        options: UIViewAnimationOptions(rawValue: UInt(animationCurve) << 16),
+        animations: { () -> Void in
+          self.businessesTableView.frame = CGRectMake(0, 0, self.businessesTableView.frame.size.width, self.view.frame.height)
+          self.searchBar.showsCancelButton = false
+        }, completion: nil)
+    }
+  }
+  
   func filterButtonClicked(sender: BusinessesViewController) {
     performSegueWithIdentifier(filtersViewSegueIdentifier, sender: self)
   }
@@ -72,11 +131,22 @@ class BusinessesViewController: UIViewController{
   func searchForBusinessesWithFilter(filter: Filter) {
     
     Business.searchWithTerm("restaurants", sort: filter.sort, categories: filter.categories, deals: filter.deals, radius: filter.radius) { (businesses: [Business]!, error: NSError!) -> Void in
-            self.businesses = businesses
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-              self.businessesTableView.reloadData()
-            })
+      self.businesses = businesses
+      self.searchedBusinesses = businesses
+      dispatch_async(dispatch_get_main_queue(), { () -> Void in
+        self.businessesTableView.reloadData()
+      })
     }
+  }
+  
+  // MARK: - Helper
+  
+  func searchBusinessesWithSearchText(searchText: String) -> [Business] {
+    
+    let pred =  NSPredicate(format: "name CONTAINS[c] %@", searchText)
+    let foundBusinesses = businesses.filter({ pred.evaluateWithObject($0)})
+    
+    return foundBusinesses
   }
   
   // MARK: - Navigation
@@ -87,9 +157,11 @@ class BusinessesViewController: UIViewController{
       ((segue.destinationViewController as! UINavigationController).topViewController as! FiltersViewController).delegate = self
     }
   }
+  
+  
 }
 
-  // MARK: - Delegate Methods
+// MARK: - Delegate Methods
 
 extension BusinessesViewController: FiltersViewControllerDelegate {
   func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters filter: Filter) {
@@ -102,20 +174,55 @@ extension BusinessesViewController:  UITableViewDelegate, UITableViewDataSource 
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCellWithIdentifier(businessReusableCellIdentifier, forIndexPath: indexPath) as! BusinessTableViewCell
     
-    cell.business = businesses[indexPath.row]
+    cell.business = searchedBusinesses[indexPath.row]
     
     return cell
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    if let businesses = businesses {
-      return businesses.count
+    if let searchedBusinesses = searchedBusinesses {
+      return searchedBusinesses.count
     }
     return 0
   }
   
 }
 
+extension BusinessesViewController: UISearchResultsUpdating{
+  
+  func updateSearchResultsForSearchController(searchController: UISearchController) {
+    let searchText = searchController.searchBar.text!
+    
+    if searchText.characters.count > 0 {
+      searchedBusinesses = searchBusinessesWithSearchText(searchText)
+    }
+    businessesTableView.reloadData()
+  }
+}
+
 extension BusinessesViewController: UISearchBarDelegate {
+  
+  func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+    let searchText = searchBar.text!
+    
+    if searchText.characters.count > 0 {
+      searchedBusinesses = searchBusinessesWithSearchText(searchText)
+    } else {
+      searchedBusinesses = businesses
+    }
+    
+    businessesTableView.reloadData()
+  }
+  
+  func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+    searchBar.resignFirstResponder()
+  }
+  
+  func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+    searchBar.text = ""
+    self.searchBar(searchBar, textDidChange: searchBar.text!)
+    searchBar.resignFirstResponder()
+  }
+  
   
 }
