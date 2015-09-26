@@ -170,6 +170,12 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="76"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="See All" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Jf-Uq-bRF">
+                                                    <rect key="frame" x="133" y="28" width="53" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Y2i-QX-ZQS">
                                                     <rect key="frame" x="261" y="35" width="51" height="31"/>
                                                     <constraints>
@@ -188,15 +194,18 @@
                                                 </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="4Jf-Uq-bRF" firstAttribute="centerY" secondItem="G8k-gb-drS" secondAttribute="centerY" id="0zS-Vs-cEb"/>
                                                 <constraint firstItem="hho-QR-mVr" firstAttribute="leading" secondItem="G8k-gb-drS" secondAttribute="leading" constant="10" id="8zs-fK-ygM"/>
                                                 <constraint firstItem="hho-QR-mVr" firstAttribute="centerY" secondItem="G8k-gb-drS" secondAttribute="centerY" id="VeL-je-1Un"/>
                                                 <constraint firstAttribute="bottom" secondItem="Y2i-QX-ZQS" secondAttribute="bottom" priority="999" constant="10" id="alW-5C-Rg3"/>
                                                 <constraint firstAttribute="trailing" secondItem="Y2i-QX-ZQS" secondAttribute="trailing" constant="10" id="ddf-qt-3z6"/>
                                                 <constraint firstItem="Y2i-QX-ZQS" firstAttribute="leading" secondItem="hho-QR-mVr" secondAttribute="trailing" constant="10" id="drJ-0w-4dj"/>
                                                 <constraint firstItem="Y2i-QX-ZQS" firstAttribute="top" secondItem="G8k-gb-drS" secondAttribute="top" priority="998" constant="10" id="qh5-yy-sLJ"/>
+                                                <constraint firstItem="4Jf-Uq-bRF" firstAttribute="centerX" secondItem="G8k-gb-drS" secondAttribute="centerX" id="ujA-VJ-Sz2"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="seeAllLabel" destination="4Jf-Uq-bRF" id="aTK-2f-rbx"/>
                                             <outlet property="selectSwitch" destination="Y2i-QX-ZQS" id="P8Y-l0-JuX"/>
                                             <outlet property="switchBottomToContentViewConstraint" destination="alW-5C-Rg3" id="gOw-7V-sKM"/>
                                             <outlet property="switchHeightConstraint" destination="SZd-6H-ix0" id="P2h-t8-gk8"/>
@@ -222,8 +231,8 @@
                                                         <action selector="buttonPressed:" destination="0XI-Ev-Ptp" eventType="touchUpInside" id="bJs-fq-lLY"/>
                                                     </connections>
                                                 </button>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rTy-Rc-c23">
-                                                    <rect key="frame" x="12" y="14" width="244" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rTy-Rc-c23">
+                                                    <rect key="frame" x="10" y="21" width="244" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>

@@ -21,6 +21,7 @@ class SwitchTableViewCell: UITableViewCell {
   @IBOutlet weak var switchHeightConstraint: NSLayoutConstraint!
   @IBOutlet weak var switchBottomToContentViewConstraint: NSLayoutConstraint!
   @IBOutlet weak var switchTopToContentViewConstraint: NSLayoutConstraint!
+  @IBOutlet weak var seeAllLabel: UILabel!
   
   
   var shouldCollapse: Bool = true{

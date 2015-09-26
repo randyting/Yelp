@@ -385,6 +385,7 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
     case .Deals:
       let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
       cell.switchLabel.text = "Offering a Deal"
+      cell.seeAllLabel.hidden = true
       cell.selectSwitch.on = switchStates?[indexPath] ?? false
       cell.delegate = self
       return cell
@@ -423,9 +424,11 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
     case .Categories:
       let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
       if self.collapsedState[indexPath.section] && indexPath.row == 4{
-        cell.switchLabel.text = "See More Categories"
+        cell.switchLabel.hidden = true
         cell.selectSwitch.hidden = true
       } else {
+        cell.seeAllLabel.hidden = true
+        cell.switchLabel.hidden = false
         cell.switchLabel.text = categories[indexPath.row]["name"]
         cell.selectSwitch.hidden = false
       }
