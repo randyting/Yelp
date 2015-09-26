@@ -12,6 +12,20 @@ class ButtonTableViewCell: UITableViewCell {
   
   @IBOutlet weak var buttonLabel: UILabel!
   @IBOutlet weak var buttonButton: UIButton!
+  @IBOutlet weak var buttonTopToContentViewConstraint: NSLayoutConstraint!
+  @IBOutlet weak var buttonBottomToContentViewConstraint: NSLayoutConstraint!
+  @IBOutlet weak var buttonHeightConstraint: NSLayoutConstraint!
+
+  
+  var shouldCollapse: Bool = true{
+    didSet {
+      if shouldCollapse {
+        collapse()
+      } else {
+        expand()
+      }
+    }
+  }
   
   var on: Bool! {
     didSet {
@@ -22,6 +36,18 @@ class ButtonTableViewCell: UITableViewCell {
         
       }
     }
+  }
+  
+  func collapse() {
+    buttonTopToContentViewConstraint.constant = 0
+    buttonBottomToContentViewConstraint.constant = 0
+    buttonHeightConstraint.constant = 0
+  }
+  
+  func expand() {
+    buttonTopToContentViewConstraint.constant = 10
+    buttonBottomToContentViewConstraint.constant = 10
+    buttonHeightConstraint.constant = 30
   }
   
   override func awakeFromNib() {

@@ -15,10 +15,23 @@ import UIKit
 class SwitchTableViewCell: UITableViewCell {
   
   weak var delegate: AnyObject?
-
+  
   @IBOutlet weak var selectSwitch: UISwitch!
-
   @IBOutlet weak var switchLabel: UILabel!
+  @IBOutlet weak var switchHeightConstraint: NSLayoutConstraint!
+  @IBOutlet weak var switchBottomToContentViewConstraint: NSLayoutConstraint!
+  @IBOutlet weak var switchTopToContentViewConstraint: NSLayoutConstraint!
+  
+  
+  var shouldCollapse: Bool = true{
+    didSet {
+      if shouldCollapse {
+        collapse()
+      } else {
+        expand()
+      }
+    }
+  }
   
   override func awakeFromNib() {
     super.awakeFromNib()
@@ -26,6 +39,20 @@ class SwitchTableViewCell: UITableViewCell {
     layoutMargins = UIEdgeInsetsZero
     separatorInset = UIEdgeInsetsZero
   }
+  
+  
+  func collapse() {
+    switchTopToContentViewConstraint.constant = 0
+    switchBottomToContentViewConstraint.constant = 0
+    switchHeightConstraint.constant = 0
+  }
+  
+  func expand() {
+    switchTopToContentViewConstraint.constant = 10
+    switchBottomToContentViewConstraint.constant = 10
+    switchHeightConstraint.constant = 31
+  }
+  
   
   override func setSelected(selected: Bool, animated: Bool) {
     super.setSelected(selected, animated: animated)

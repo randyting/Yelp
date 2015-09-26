@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Businesses View Controller-->
@@ -167,14 +166,14 @@
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="com.randy.SwitchCell" rowHeight="77" id="KcY-tx-LOW" customClass="SwitchTableViewCell" customModule="Yelp" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="92" width="320" height="77"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KcY-tx-LOW" id="G8k-gb-drS">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" verticalCompressionResistancePriority="250" tableViewCell="KcY-tx-LOW" id="G8k-gb-drS">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="76"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Y2i-QX-ZQS">
-                                                    <rect key="frame" x="261" y="10" width="51" height="31"/>
+                                                    <rect key="frame" x="261" y="35" width="51" height="31"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="31" id="aY8-r0-4s6"/>
+                                                        <constraint firstAttribute="height" constant="31" id="SZd-6H-ix0"/>
                                                         <constraint firstAttribute="width" constant="49" id="chT-cK-7gi"/>
                                                     </constraints>
                                                     <connections>
@@ -182,7 +181,7 @@
                                                     </connections>
                                                 </switch>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hho-QR-mVr">
-                                                    <rect key="frame" x="10" y="15" width="241" height="21"/>
+                                                    <rect key="frame" x="10" y="28" width="241" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -190,34 +189,30 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="hho-QR-mVr" firstAttribute="leading" secondItem="G8k-gb-drS" secondAttribute="leading" constant="10" id="8zs-fK-ygM"/>
-                                                <constraint firstItem="Y2i-QX-ZQS" firstAttribute="top" secondItem="G8k-gb-drS" secondAttribute="top" constant="10" id="GcI-rL-4t9"/>
-                                                <constraint firstAttribute="bottom" secondItem="Y2i-QX-ZQS" secondAttribute="bottom" constant="10" id="L3t-hT-xbE"/>
-                                                <constraint firstItem="Y2i-QX-ZQS" firstAttribute="centerY" secondItem="G8k-gb-drS" secondAttribute="centerY" id="Ue0-oR-fd5"/>
                                                 <constraint firstItem="hho-QR-mVr" firstAttribute="centerY" secondItem="G8k-gb-drS" secondAttribute="centerY" id="VeL-je-1Un"/>
+                                                <constraint firstAttribute="bottom" secondItem="Y2i-QX-ZQS" secondAttribute="bottom" priority="999" constant="10" id="alW-5C-Rg3"/>
                                                 <constraint firstAttribute="trailing" secondItem="Y2i-QX-ZQS" secondAttribute="trailing" constant="10" id="ddf-qt-3z6"/>
                                                 <constraint firstItem="Y2i-QX-ZQS" firstAttribute="leading" secondItem="hho-QR-mVr" secondAttribute="trailing" constant="10" id="drJ-0w-4dj"/>
+                                                <constraint firstItem="Y2i-QX-ZQS" firstAttribute="top" secondItem="G8k-gb-drS" secondAttribute="top" priority="998" constant="10" id="qh5-yy-sLJ"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="selectSwitch" destination="Y2i-QX-ZQS" id="P8Y-l0-JuX"/>
+                                            <outlet property="switchBottomToContentViewConstraint" destination="alW-5C-Rg3" id="gOw-7V-sKM"/>
+                                            <outlet property="switchHeightConstraint" destination="SZd-6H-ix0" id="P2h-t8-gk8"/>
                                             <outlet property="switchLabel" destination="hho-QR-mVr" id="rbs-tf-PXh"/>
+                                            <outlet property="switchTopToContentViewConstraint" destination="qh5-yy-sLJ" id="mKk-sQ-XaL"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="com.randy.ButtonCell" rowHeight="77" id="1dD-Dl-4cY" customClass="ButtonTableViewCell" customModule="Yelp" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="169" width="320" height="77"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="com.randy.ButtonCell" rowHeight="63" id="1dD-Dl-4cY" customClass="ButtonTableViewCell" customModule="Yelp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="169" width="320" height="63"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="1dD-Dl-4cY" id="wWX-CL-HGv">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="76"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" verticalCompressionResistancePriority="250" tableViewCell="1dD-Dl-4cY" id="wWX-CL-HGv">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="62"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rTy-Rc-c23">
-                                                    <rect key="frame" x="10" y="15" width="42" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gBV-3i-Q82">
-                                                    <rect key="frame" x="256" y="10" width="46" height="30"/>
+                                                    <rect key="frame" x="264" y="22" width="46" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="46" id="Hwc-P0-IbC"/>
                                                         <constraint firstAttribute="height" constant="30" id="Qx8-lh-97f"/>
@@ -227,21 +222,28 @@
                                                         <action selector="buttonPressed:" destination="0XI-Ev-Ptp" eventType="touchUpInside" id="bJs-fq-lLY"/>
                                                     </connections>
                                                 </button>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rTy-Rc-c23">
+                                                    <rect key="frame" x="12" y="14" width="244" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="rTy-Rc-c23" firstAttribute="centerY" secondItem="wWX-CL-HGv" secondAttribute="centerY" id="7UB-hl-WRj"/>
-                                                <constraint firstItem="gBV-3i-Q82" firstAttribute="top" secondItem="wWX-CL-HGv" secondAttribute="top" constant="10" id="97f-ma-kVC"/>
-                                                <constraint firstAttribute="bottom" secondItem="gBV-3i-Q82" secondAttribute="bottom" constant="10" id="JuK-Ms-IcZ"/>
-                                                <constraint firstItem="gBV-3i-Q82" firstAttribute="centerY" secondItem="wWX-CL-HGv" secondAttribute="centerY" id="YGV-x6-zur"/>
-                                                <constraint firstItem="gBV-3i-Q82" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="rTy-Rc-c23" secondAttribute="trailing" constant="10" id="b2s-w3-bgr"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="gBV-3i-Q82" secondAttribute="trailing" constant="10" id="btX-Be-vS0"/>
-                                                <constraint firstItem="rTy-Rc-c23" firstAttribute="centerY" secondItem="wWX-CL-HGv" secondAttribute="centerY" id="fk3-lW-rGx"/>
-                                                <constraint firstItem="rTy-Rc-c23" firstAttribute="leading" secondItem="wWX-CL-HGv" secondAttribute="leading" constant="10" id="rJe-mk-I3G"/>
+                                                <constraint firstItem="rTy-Rc-c23" firstAttribute="centerY" secondItem="wWX-CL-HGv" secondAttribute="centerY" id="5DF-DL-zXc"/>
+                                                <constraint firstItem="gBV-3i-Q82" firstAttribute="top" secondItem="wWX-CL-HGv" secondAttribute="top" priority="998" constant="10" id="LhK-Lt-8ve"/>
+                                                <constraint firstItem="rTy-Rc-c23" firstAttribute="leading" secondItem="wWX-CL-HGv" secondAttribute="leading" constant="10" id="dXu-w4-OaA"/>
+                                                <constraint firstItem="gBV-3i-Q82" firstAttribute="leading" secondItem="rTy-Rc-c23" secondAttribute="trailing" constant="10" id="ehd-h6-PWL"/>
+                                                <constraint firstAttribute="bottom" secondItem="gBV-3i-Q82" secondAttribute="bottom" priority="999" constant="10" id="hpj-vp-0Xv"/>
+                                                <constraint firstAttribute="trailing" secondItem="gBV-3i-Q82" secondAttribute="trailing" constant="10" id="okQ-xa-bPN"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="buttonBottomToContentViewConstraint" destination="hpj-vp-0Xv" id="a15-2S-eWQ"/>
                                             <outlet property="buttonButton" destination="gBV-3i-Q82" id="mkw-hL-tWd"/>
+                                            <outlet property="buttonHeightConstraint" destination="Qx8-lh-97f" id="SMk-VN-SC5"/>
                                             <outlet property="buttonLabel" destination="rTy-Rc-c23" id="A7x-yu-Ojz"/>
+                                            <outlet property="buttonTopToContentViewConstraint" destination="LhK-Lt-8ve" id="iVf-PN-JT4"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

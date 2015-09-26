@@ -35,6 +35,7 @@ class FiltersViewController: UIViewController {
   var categories = [[String:String]]()
   var filter = Filter()
   var switchStates: [NSIndexPath:Bool]?
+  var collapsedState = [NSIndexPath:Bool]()
   
   // MARK: - Lifecycle
   
@@ -59,6 +60,14 @@ class FiltersViewController: UIViewController {
   }
   
   // MARK: - Initialization
+  
+  func setupCollapsedStateOfCells() {
+    collapseOrExpandSection(FiltersSection.Deals.rawValue, setCollapsed: false, reloadSection: false)
+    collapseOrExpandSection(FiltersSection.Radius.rawValue, setCollapsed: true, reloadSection: false)
+    collapseOrExpandSection(FiltersSection.SortBy.rawValue, setCollapsed: true, reloadSection: false)
+    collapseOrExpandSection(FiltersSection.Categories.rawValue, setCollapsed: true, reloadSection: false)
+    filtersTableView.reloadData()
+  }
   
   func setupNavigationBar(){
     self.title = "Filter"
@@ -94,6 +103,7 @@ class FiltersViewController: UIViewController {
       }
       dispatch_async(dispatch_get_main_queue(), { () -> Void in
         self.filtersTableView.reloadData()
+        self.setupCollapsedStateOfCells()
       })
     }
     task.resume()
@@ -118,6 +128,56 @@ class FiltersViewController: UIViewController {
   
   // MARK: - Behavior
   
+  func collapseOrExpandSection(section: Int, setCollapsed: Bool, reloadSection: Bool) {
+    
+    if setCollapsed {
+      switch section {
+      case FiltersSection.Deals.rawValue:
+        collapsedState[NSIndexPath(forRow: 0, inSection: FiltersSection.Deals.rawValue)] = false
+      case FiltersSection.Radius.rawValue:
+        collapsedState[NSIndexPath(forRow: 0, inSection: FiltersSection.Radius.rawValue)] = false
+        for var row = 1; row < RadiusSection.count.rawValue; row++ {
+          collapsedState[NSIndexPath(forRow: row, inSection: FiltersSection.Radius.rawValue)] = true
+        }
+      case FiltersSection.SortBy.rawValue:
+        collapsedState[NSIndexPath(forRow: 0, inSection: FiltersSection.SortBy.rawValue)] = false
+        for var row = 1; row < YelpSortMode.count.rawValue; row++ {
+          collapsedState[NSIndexPath(forRow: row, inSection: FiltersSection.SortBy.rawValue)] = true
+        }
+      case FiltersSection.Categories.rawValue:
+        for var row = 1; row < 5; row++ {
+          collapsedState[NSIndexPath(forRow: row, inSection: FiltersSection.Categories.rawValue)] = false
+        }
+        for var row = 5; row < categories.count; row++ {
+          collapsedState[NSIndexPath(forRow: row, inSection: FiltersSection.Categories.rawValue)] = true
+        }
+      default: break
+      }
+      
+    } else {
+      switch section {
+      case FiltersSection.Deals.rawValue:
+        collapsedState[NSIndexPath(forRow: 0, inSection: FiltersSection.Deals.rawValue)] = false
+      case FiltersSection.Radius.rawValue:
+        for var row = 0; row < RadiusSection.count.rawValue; row++ {
+          collapsedState[NSIndexPath(forRow: row, inSection: FiltersSection.Radius.rawValue)] = false
+        }
+      case FiltersSection.SortBy.rawValue:
+        for var row = 0; row < YelpSortMode.count.rawValue; row++ {
+          collapsedState[NSIndexPath(forRow: row, inSection: FiltersSection.SortBy.rawValue)] = false
+        }
+      case FiltersSection.Categories.rawValue:
+        for var row = 0; row < categories.count; row++ {
+          collapsedState[NSIndexPath(forRow: row, inSection: FiltersSection.Categories.rawValue)] = false
+        }
+      default: break
+      }
+    }
+    if reloadSection {
+    filtersTableView.reloadSections(NSIndexSet(index: section), withRowAnimation: UITableViewRowAnimation.None)
+    }
+  }
+  
   func onCancelButtonTapped(sender: UIBarButtonItem) {
     self.dismissViewControllerAnimated(true) { () -> Void in
       // Do nothing
@@ -140,28 +200,35 @@ class FiltersViewController: UIViewController {
   }
   
   @IBAction func buttonPressed(sender: UIButton) {
-    let selectedIndexPath = filtersTableView.indexPathForCell(sender.superview?.superview as! UITableViewCell)
+    let selectedIndexPath = filtersTableView.indexPathForCell(sender.superview?.superview as! UITableViewCell)!
     
-    if switchStates![selectedIndexPath!] == nil {
-      for var row = 0; row < filtersTableView.numberOfRowsInSection((selectedIndexPath?.section)!); row++ {
-        let modifyingIndexPath = NSIndexPath(forRow: row, inSection: (selectedIndexPath?.section)!)
-        switchStates![modifyingIndexPath] = false
-      }
-    }
-    
-    for (indexPath, _) in switchStates! {
-      if indexPath.section == selectedIndexPath?.section{
-        if indexPath.row == selectedIndexPath?.row {
-          switchStates![indexPath] = true
-        } else {
-          switchStates![indexPath] = false
+    if collapsedState[NSIndexPath(forRow: 1, inSection: (selectedIndexPath.section))]! == true {
+      collapseOrExpandSection(selectedIndexPath.section, setCollapsed: false, reloadSection: true)
+    } else {
+      if switchStates![selectedIndexPath] == nil {
+        for var row = 0; row < filtersTableView.numberOfRowsInSection((selectedIndexPath.section)); row++ {
+          let modifyingIndexPath = NSIndexPath(forRow: row, inSection: (selectedIndexPath.section))
+          switchStates![modifyingIndexPath] = false
         }
-
       }
+      
+      for (indexPath, _) in switchStates! {
+        if indexPath.section == selectedIndexPath.section{
+          if indexPath.row == selectedIndexPath.row {
+            switchStates![indexPath] = true
+          } else {
+            switchStates![indexPath] = false
+          }
+        }
+      }
+      filtersTableView.reloadSections(NSIndexSet(index: selectedIndexPath.section), withRowAnimation: UITableViewRowAnimation.None)
+      
+      let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
+      dispatch_after(delayTime, dispatch_get_main_queue()) {
+        self.collapseOrExpandSection(selectedIndexPath.section, setCollapsed: true, reloadSection: true)
+      }
+      
     }
-    
-    filtersTableView.reloadData()
-    
   }
   
   
@@ -189,7 +256,7 @@ class FiltersViewController: UIViewController {
         }
       }
     }
-  
+    
     return sortMode
   }
   
@@ -210,7 +277,7 @@ class FiltersViewController: UIViewController {
   func getSelectedDealsFilterForSwitchStates(switchStates: [NSIndexPath:Bool]) -> Bool? {
     
     return switchStates[NSIndexPath(forRow: 0, inSection: FiltersSection.Deals.rawValue)] ?? false
-  
+    
     
   }
   
@@ -326,28 +393,37 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     
+    // Populate collapsedState dictionary with initial values
+    if collapsedState[indexPath] == nil {
+      collapsedState[indexPath] = false
+    }
+    
     switch FiltersSection(rawValue: indexPath.section)! {
     case .Deals:
       let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
       cell.switchLabel.text = "Offering a Deal"
       cell.selectSwitch.on = switchStates?[indexPath] ?? false
       cell.delegate = self
+      cell.shouldCollapse = collapsedState[indexPath]!
       return cell
     case .Radius:
       let cell = filtersTableView.dequeueReusableCellWithIdentifier(buttonCellReuseIdentifier, forIndexPath: indexPath) as! ButtonTableViewCell
       cell.buttonLabel.text = RadiusSection(rawValue: indexPath.row)?.title()
       cell.on = switchStates?[indexPath] ?? false
+      cell.shouldCollapse = collapsedState[indexPath]!
       return cell
     case .SortBy:
       let cell = filtersTableView.dequeueReusableCellWithIdentifier(buttonCellReuseIdentifier, forIndexPath: indexPath) as! ButtonTableViewCell
       cell.buttonLabel.text = YelpSortMode(rawValue: indexPath.row)?.title()
       cell.on = switchStates?[indexPath] ?? false
+      cell.shouldCollapse = collapsedState[indexPath]!
       return cell
     case .Categories:
       let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
       cell.selectSwitch.on = switchStates?[indexPath] ?? false
       cell.switchLabel.text = categories[indexPath.row]["name"]
       cell.delegate = self
+      cell.shouldCollapse = collapsedState[indexPath]!
       return cell
     case .count:
       let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
@@ -358,6 +434,7 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    tableView.deselectRowAtIndexPath(indexPath, animated: false)
+    
   }
 }
