@@ -65,6 +65,9 @@ class ButtonTableViewCell: UITableViewCell {
   
   override func prepareForReuse() {
     self.buttonLabel.text = ""
+    self.buttonButton.titleLabel!.text = ""
+    self.textLabel?.text = ""
+    
   }
   
 }

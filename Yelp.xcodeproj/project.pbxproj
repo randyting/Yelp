@@ -77,8 +77,8 @@
 			isa = PBXGroup;
 			children = (
 				6FDD223F1BB21DD80027DA90 /* Views */,
-				6F5E7CC41BB1411C00E932CE /* Models */,
 				6F5E7CC31BB1411200E932CE /* ViewControllers */,
+				6F5E7CC41BB1411C00E932CE /* Models */,
 				6F5E7CC21BB1410A00E932CE /* Libraries */,
 				6F5E7CC11BB1410000E932CE /* Application */,
 				6F5E7CC01BB140F300E932CE /* API */,
