@@ -15,10 +15,10 @@ import UIKit
 class SwitchTableViewCell: UITableViewCell {
   
   weak var delegate: AnyObject?
-
-  @IBOutlet weak var selectSwitch: UISwitch!
-
+ 
   @IBOutlet weak var switchLabel: UILabel!
+  @IBOutlet weak var selectSwitch: UISwitch!
+  
   
   override func awakeFromNib() {
     super.awakeFromNib()
@@ -41,5 +41,7 @@ class SwitchTableViewCell: UITableViewCell {
   @IBAction func onSwitchValueChanged(sender: AnyObject) {
     delegate?.switchTableViewCell?(self, switchValueChangedTo: selectSwitch.on)
   }
+
+  
   
 }

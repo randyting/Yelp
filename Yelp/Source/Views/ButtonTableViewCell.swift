@@ -8,10 +8,20 @@
 
 import UIKit
 
+@objc protocol ButtonTableViewCellDelegate {
+  optional func buttonTableViewCell(buttonTableViewCell: ButtonTableViewCell, buttonPressed: Bool)
+}
+
 class ButtonTableViewCell: UITableViewCell {
+  
+  weak var delegate: AnyObject?
   
   @IBOutlet weak var buttonLabel: UILabel!
   @IBOutlet weak var buttonButton: UIButton!
+  
+  @IBAction func buttonPressed(sender: AnyObject) {
+    delegate?.buttonTableViewCell?(self, buttonPressed: true)
+  }
   
   var on: Bool! {
     didSet {
