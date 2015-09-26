@@ -128,11 +128,7 @@ class FiltersViewController: UIViewController {
     dispatch_async(dispatch_get_main_queue()) { () -> Void in
       self.collapsedState[section] = setCollapsed
       if reloadSection {
-        if section == FiltersSection.Categories.rawValue{
-          self.filtersTableView.reloadSections(NSIndexSet(index: section), withRowAnimation: UITableViewRowAnimation.Fade)
-        } else {
-          self.filtersTableView.reloadSections(NSIndexSet(index: section), withRowAnimation: UITableViewRowAnimation.None)
-        }
+        self.filtersTableView.reloadSections(NSIndexSet(index: section), withRowAnimation: UITableViewRowAnimation.None)
       }
     }
     
@@ -426,11 +422,12 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
       return cell
     case .Categories:
       let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
-      if self.collapsedState[indexPath.section] && indexPath.row == 4 {
+      if self.collapsedState[indexPath.section] && indexPath.row == 4{
         cell.switchLabel.text = "See More Categories"
         cell.selectSwitch.hidden = true
       } else {
         cell.switchLabel.text = categories[indexPath.row]["name"]
+        cell.selectSwitch.hidden = false
       }
       cell.selectSwitch.on = switchStates?[indexPath] ?? false
       cell.delegate = self
