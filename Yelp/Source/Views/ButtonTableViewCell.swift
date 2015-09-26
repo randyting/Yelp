@@ -53,6 +53,8 @@ class ButtonTableViewCell: UITableViewCell {
   override func awakeFromNib() {
     super.awakeFromNib()
     
+    selectionStyle = UITableViewCellSelectionStyle.None
+    
     layoutMargins = UIEdgeInsetsZero
     separatorInset = UIEdgeInsetsZero
   }

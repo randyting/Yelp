@@ -426,6 +426,8 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
       if self.collapsedState[indexPath.section] && indexPath.row == 4{
         cell.switchLabel.hidden = true
         cell.selectSwitch.hidden = true
+        cell.seeAllLabel.hidden = false
+        cell.selectionStyle = UITableViewCellSelectionStyle.Default
       } else {
         cell.seeAllLabel.hidden = true
         cell.switchLabel.hidden = false

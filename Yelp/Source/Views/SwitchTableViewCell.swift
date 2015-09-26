@@ -37,10 +37,11 @@ class SwitchTableViewCell: UITableViewCell {
   override func awakeFromNib() {
     super.awakeFromNib()
     
+    selectionStyle = UITableViewCellSelectionStyle.None
+    
     layoutMargins = UIEdgeInsetsZero
     separatorInset = UIEdgeInsetsZero
   }
-  
   
   func collapse() {
     switchTopToContentViewConstraint.constant = 0
@@ -58,7 +59,6 @@ class SwitchTableViewCell: UITableViewCell {
   override func setSelected(selected: Bool, animated: Bool) {
     super.setSelected(selected, animated: animated)
     
-    // Configure the view for the selected state
   }
   
   override func prepareForReuse() {

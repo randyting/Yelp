@@ -133,12 +133,17 @@ class BusinessesViewController: UIViewController{
   func searchForBusinessesWithFilter(filter: Filter) {
     
     Business.searchWithTerm("restaurants", sort: filter.sort, categories: filter.categories, deals: filter.deals, radius: filter.radius, limit: nil, offset: nil) { (businesses: [Business]!, error: NSError!) -> Void in
-      self.businesses = businesses
-      self.searchedBusinesses = businesses
-      self.newBusinessCount = businesses.count
-      dispatch_async(dispatch_get_main_queue(), { () -> Void in
-        self.businessesTableView.reloadData()
-      })
+      if let error = error {
+        print((error.localizedDescription))
+      } else {
+        self.businesses = businesses
+        self.searchedBusinesses = businesses
+        self.newBusinessCount = businesses.count
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+          self.businessesTableView.reloadData()
+        })
+      }
+
     }
   }
   
@@ -150,7 +155,6 @@ class BusinessesViewController: UIViewController{
       if let error = error {
         print((error.localizedDescription))
       } else {
-        print((businesses))
         self.businesses?.appendContentsOf(businesses)
         self.searchedBusinesses = self.searchBusinessesWithSearchText(self.searchBar.text!)
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -224,8 +228,6 @@ extension BusinessesViewController: UIScrollViewDelegate{
     let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height
     
     if (maximumOffset - currentOffset) <= 1500 && (maximumOffset - currentOffset) >= -100 {
-      print("newBusiness Count", newBusinessCount)
-      print("business.count", businesses.count)
       if newBusinessCount == businesses.count && searchBar.text?.characters.count == 0 {
         loadMorePagesWithFilter(currentFilter)
       }
