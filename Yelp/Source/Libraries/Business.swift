@@ -19,6 +19,7 @@ class Business: NSObject {
   let reviewCount: NSNumber?
   var geocodeAddress: String?
   var placemark: CLPlacemark?
+  var coordinate: CLLocationCoordinate2D?
   
   init(dictionary: NSDictionary) {
     name = dictionary["name"] as? String
@@ -46,7 +47,10 @@ class Business: NSObject {
         address += neighborhoods![0] as! String
       }
       
-      // Randy's code
+      if let coordinate = location!["coordinate"] as? NSDictionary {
+        self.coordinate = CLLocationCoordinate2DMake((coordinate["latitude"] as? CLLocationDegrees)!, coordinate["longitude"] as! CLLocationDegrees)
+      }
+      
       if let displayAddressArray = location!["display_address"] as? NSArray {
         if displayAddressArray.count == 2 {
           geocodeAddress = (displayAddressArray[0] as! String) + ", " + (displayAddressArray[1] as! String)
@@ -54,7 +58,6 @@ class Business: NSObject {
           geocodeAddress = (displayAddressArray[0] as! String) + ", " + (displayAddressArray[2] as! String)
         }
       }
-      
       
     }
     self.address = address

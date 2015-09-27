@@ -18,7 +18,7 @@ class BusinessesViewController: UIViewController{
   
   // MARK: - Storyboard Objects
   
-
+  
   @IBOutlet weak var businessesMapView: MKMapView!
   @IBOutlet weak var businessesTableView: UITableView!
   @IBOutlet weak var businessTableViewBottomToSuperConstraint: NSLayoutConstraint!
@@ -186,8 +186,7 @@ class BusinessesViewController: UIViewController{
         self.searchedBusinesses = self.searchBusinessesWithSearchText(self.searchBar.text!)
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
           self.businessesTableView.reloadData()
-          // Don't reload map data because geocoader limits the number of requests in a given period of time.  Too many restaurants will cause Apple's geocoder to ignore requests.
-//          self.reloadMapData(self.searchedBusinesses)
+          self.reloadMapData(self.searchedBusinesses)
         })
       }
     }
@@ -309,18 +308,28 @@ extension BusinessesViewController: MKMapViewDelegate {
     businessesMapView.removeAnnotations(businessesMapView.annotations)
     
     for business in businesses {
-      CLGeocoder().geocodeAddressString(business.geocodeAddress!) { (placemarks: [CLPlacemark]?, error: NSError?) -> Void in
-        
-        if let error = error{
-          print((error.localizedDescription))
+      if business.coordinate == nil {
+        CLGeocoder().geocodeAddressString(business.geocodeAddress!) { (placemarks: [CLPlacemark]?, error: NSError?) -> Void in
+          
+          if let error = error{
+            print((error.localizedDescription))
+          }
+          if let placemark = placemarks?[0] {
+            business.placemark = placemark
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+              self.businessesMapView.addAnnotation(MKPlacemark(placemark: placemark))
+            })
+          }
         }
-        if let placemark = placemarks?[0] {
-          business.placemark = placemark
-          dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            self.businessesMapView.addAnnotation(MKPlacemark(placemark: placemark))
-          })
-        }
+      } else {
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = business.coordinate!
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+          self.businessesMapView.addAnnotation(annotation)
+        })
       }
+      
+      
     }
   }
   
