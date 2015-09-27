@@ -23,7 +23,6 @@
 		6FEED5D01BB1478400B95CF4 /* Business.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEED5CF1BB1478400B95CF4 /* Business.swift */; settings = {ASSET_TAGS = (); }; };
 		6FEED5D21BB1478800B95CF4 /* YelpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEED5D11BB1478800B95CF4 /* YelpClient.swift */; settings = {ASSET_TAGS = (); }; };
 		6FF7634A1BB7DA8800E9ACA6 /* UIAppearance+Swift.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FF763491BB7DA8800E9ACA6 /* UIAppearance+Swift.m */; settings = {ASSET_TAGS = (); }; };
-		6FF763541BB7E4D900E9ACA6 /* FiltersSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF763531BB7E4D900E9ACA6 /* FiltersSectionHeaderView.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,7 +47,6 @@
 		6FEED5D11BB1478800B95CF4 /* YelpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YelpClient.swift; path = Source/API/YelpClient.swift; sourceTree = "<group>"; };
 		6FF763481BB7DA5D00E9ACA6 /* UIAppearance+Swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIAppearance+Swift.h"; path = "Source/Libraries/UIAppearance+Swift.h"; sourceTree = "<group>"; };
 		6FF763491BB7DA8800E9ACA6 /* UIAppearance+Swift.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIAppearance+Swift.m"; path = "Source/Libraries/UIAppearance+Swift.m"; sourceTree = "<group>"; };
-		6FF763531BB7E4D900E9ACA6 /* FiltersSectionHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FiltersSectionHeaderView.swift; path = Source/Views/FiltersSectionHeaderView.swift; sourceTree = "<group>"; };
 		8AB0FD6AC98955686043FD15 /* Pods-Yelp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Yelp.release.xcconfig"; path = "Pods/Target Support Files/Pods-Yelp/Pods-Yelp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -151,7 +149,6 @@
 				6FDD22401BB21E030027DA90 /* BusinessTableViewCell.swift */,
 				6F1647471BB285ED0086B797 /* SwitchTableViewCell.swift */,
 				6FE110BC1BB4B60A00A0D8D1 /* ButtonTableViewCell.swift */,
-				6FF763531BB7E4D900E9ACA6 /* FiltersSectionHeaderView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -287,7 +284,6 @@
 				6FDDA7181BB7C95A00CF61EF /* AppearanceHelper.swift in Sources */,
 				6F1647481BB285ED0086B797 /* SwitchTableViewCell.swift in Sources */,
 				6FEED5D01BB1478400B95CF4 /* Business.swift in Sources */,
-				6FF763541BB7E4D900E9ACA6 /* FiltersSectionHeaderView.swift in Sources */,
 				6F5E7CC61BB141DD00E932CE /* BusinessesViewController.swift in Sources */,
 				6F8A7A4B1BB3E7E000F76F50 /* Filter.swift in Sources */,
 				6FDD22461BB242940027DA90 /* FiltersViewController.swift in Sources */,

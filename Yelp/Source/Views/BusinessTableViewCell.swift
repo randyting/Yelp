@@ -32,6 +32,9 @@ class BusinessTableViewCell: UITableViewCell {
   override func awakeFromNib() {
     super.awakeFromNib()
     
+    businessImage.layer.cornerRadius = 5.0
+    businessImage.clipsToBounds = true
+    
     layoutMargins = UIEdgeInsetsZero
     separatorInset = UIEdgeInsetsZero
   }
