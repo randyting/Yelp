@@ -129,7 +129,7 @@
                     <connections>
                         <outlet property="businessTableViewBottomToSuperConstraint" destination="xZX-Vy-oX0" id="0vn-R8-Xfx"/>
                         <outlet property="businessesMapView" destination="mf6-ic-FZa" id="tjM-jT-77b"/>
-                        <outlet property="businessesTableView" destination="oue-fR-74y" id="0DF-Rv-RqN"/>
+                        <outlet property="businessesTableView" destination="oue-fR-74y" id="CXk-Gw-LdX"/>
                         <segue destination="dDJ-Wa-sYh" kind="modal" identifier="com.randy.FiltersViewSegue" id="m4Z-i2-lk6"/>
                     </connections>
                 </viewController>

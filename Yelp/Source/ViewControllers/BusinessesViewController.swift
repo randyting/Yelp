@@ -20,7 +20,7 @@ class BusinessesViewController: UIViewController{
   
 
   @IBOutlet weak var businessesMapView: MKMapView!
-  @IBOutlet var businessesTableView: UITableView!
+  @IBOutlet weak var businessesTableView: UITableView!
   @IBOutlet weak var businessTableViewBottomToSuperConstraint: NSLayoutConstraint!
   
   // MARK: - Properties
@@ -31,14 +31,12 @@ class BusinessesViewController: UIViewController{
   var searchBar: UISearchBar!
   var currentFilter = Filter()
   var newBusinessCount: Int = 0
-
+  var currentLocation = CLLocationCoordinate2DMake(37.785771,-122.406165)
   
   // MARK: - Lifecycle
   
   override func loadView() {
     super.loadView()
-    
-    
     
     //    setupSearchController()
     setupSearchBar()
@@ -62,6 +60,8 @@ class BusinessesViewController: UIViewController{
   
   func setupMapView() {
     businessesMapView.hidden = true
+    businessesMapView.delegate = self
+    businessesMapView.setRegion(MKCoordinateRegionMake(currentLocation, MKCoordinateSpanMake(0.1, 0.1)), animated: false)
   }
   
   func setupChangeTableViewFrameWhenKeyboardIsShownOrHides(){
@@ -168,6 +168,7 @@ class BusinessesViewController: UIViewController{
         self.newBusinessCount = businesses.count
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
           self.businessesTableView.reloadData()
+          self.reloadMapData(self.searchedBusinesses)
         })
       }
     }
@@ -185,6 +186,8 @@ class BusinessesViewController: UIViewController{
         self.searchedBusinesses = self.searchBusinessesWithSearchText(self.searchBar.text!)
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
           self.businessesTableView.reloadData()
+          // Don't reload map data because geocoader limits the number of requests in a given period of time.  Too many restaurants will cause Apple's geocoder to ignore requests.
+//          self.reloadMapData(self.searchedBusinesses)
         })
       }
     }
@@ -208,7 +211,6 @@ class BusinessesViewController: UIViewController{
   }
   
   // MARK: - Navigation
-  
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if segue.identifier == filtersViewSegueIdentifier {
@@ -270,6 +272,7 @@ extension BusinessesViewController: UISearchResultsUpdating{
       searchedBusinesses = searchBusinessesWithSearchText(searchText)
     }
     businessesTableView.reloadData()
+    reloadMapData(searchedBusinesses)
   }
 }
 
@@ -285,6 +288,7 @@ extension BusinessesViewController: UISearchBarDelegate {
     }
     
     businessesTableView.reloadData()
+    reloadMapData(searchedBusinesses)
   }
   
   func searchBarSearchButtonClicked(searchBar: UISearchBar) {
@@ -297,5 +301,27 @@ extension BusinessesViewController: UISearchBarDelegate {
     searchBar.resignFirstResponder()
   }
   
+}
+
+extension BusinessesViewController: MKMapViewDelegate {
+  
+  func reloadMapData(businesses: [Business]){
+    businessesMapView.removeAnnotations(businessesMapView.annotations)
+    
+    for business in businesses {
+      CLGeocoder().geocodeAddressString(business.geocodeAddress!) { (placemarks: [CLPlacemark]?, error: NSError?) -> Void in
+        
+        if let error = error{
+          print((error.localizedDescription))
+        }
+        if let placemark = placemarks?[0] {
+          business.placemark = placemark
+          dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.businessesMapView.addAnnotation(MKPlacemark(placemark: placemark))
+          })
+        }
+      }
+    }
+  }
   
 }
