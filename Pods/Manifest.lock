@@ -23,13 +23,16 @@ PODS:
   - BDBOAuth1Manager (1.5.0):
     - AFNetworking/NSURLConnection (~> 2.5.0)
     - AFNetworking/NSURLSession (~> 2.5.0)
+  - iCarousel (1.8.2)
 
 DEPENDENCIES:
   - AFNetworking
   - BDBOAuth1Manager
+  - iCarousel
 
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
   BDBOAuth1Manager: 2e28773b58f880fb36b5cd3efcf0b1fefbc78a99
+  iCarousel: 67c8a43da5a46795b56aadfc96cd36a16f6149b2
 
 COCOAPODS: 0.38.2

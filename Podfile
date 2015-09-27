@@ -6,6 +6,7 @@ target 'Yelp' do
 
 pod "AFNetworking"
 pod "BDBOAuth1Manager"
+pod "iCarousel"
 
 end
 

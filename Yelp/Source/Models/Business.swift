@@ -20,9 +20,11 @@ class Business: NSObject {
   var geocodeAddress: String?
   var placemark: CLPlacemark?
   var coordinate: CLLocationCoordinate2D?
+  var id: String?
   
   init(dictionary: NSDictionary) {
     name = dictionary["name"] as? String
+    id = dictionary["id"] as? String
     
     let imageURLString = dictionary["image_url"] as? String
     if imageURLString != nil {

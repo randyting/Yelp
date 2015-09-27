@@ -32,12 +32,13 @@ class BusinessesViewController: UIViewController{
   var currentFilter = Filter()
   var newBusinessCount: Int = 0
   var currentLocation = CLLocationCoordinate2DMake(37.785771,-122.406165)
+  var businessDetail: BusinessDetail!
   
   // MARK: - Lifecycle
   
   override func loadView() {
     super.loadView()
-
+    
     //    setupSearchController()
     setupSearchBar()
     setupNavigationItem(navigationItem)
@@ -50,6 +51,15 @@ class BusinessesViewController: UIViewController{
     searchForBusinessesWithFilter(currentFilter)
     setupTableView(businessesTableView)
     setupMapView()
+    
+//    BusinessDetail.getDetailsForBusinessID("byobw-bring-your-own-big-wheel-race-san-francisco") { (details: [String : AnyObject]!, error: NSError!) -> Void in
+//      if let error = error {
+//        print((error.localizedDescription))
+//      } else {
+//        self.businessDetail = BusinessDetail(dictionary: details)
+//        print((self.businessDetail.imageUrl))
+//      }
+//    }
     
   }
   
@@ -83,7 +93,7 @@ class BusinessesViewController: UIViewController{
     tableView.delegate = self
     tableView.dataSource = self
     tableView.estimatedRowHeight = 100
-    tableView.rowHeight = UITableViewAutomaticDimension    
+    tableView.rowHeight = UITableViewAutomaticDimension
   }
   
   func setupSearchController() {
@@ -332,7 +342,7 @@ extension BusinessesViewController: UISearchBarDelegate {
 extension BusinessesViewController: MKMapViewDelegate {
   
   func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-//    UIAlertView(title: "tapped Annotation!", message: view.annotation!.title!, delegate: nil, cancelButtonTitle: "OK").show()
+    //    UIAlertView(title: "tapped Annotation!", message: view.annotation!.title!, delegate: nil, cancelButtonTitle: "OK").show()
   }
   
 }
