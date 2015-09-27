@@ -30,9 +30,10 @@ class ButtonTableViewCell: UITableViewCell {
   var on: Bool! {
     didSet {
       if (on != nil) && on == true {
-        buttonButton.tintColor = UIColor.blueColor()
+        buttonButton.setImage(UIImage(named: "SelectedButton"), forState: UIControlState.Normal)
       } else {
-        buttonButton.tintColor = UIColor.lightGrayColor()
+        buttonButton.setImage(UIImage(named: "EmptyButton"), forState: UIControlState.Normal)
+        buttonButton.imageView?.alpha = 1.0
         
       }
     }

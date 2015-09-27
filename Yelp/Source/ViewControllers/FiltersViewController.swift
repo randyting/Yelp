@@ -155,9 +155,7 @@ class FiltersViewController: UIViewController {
     
   }
   
-  @IBAction func buttonPressed(sender: UIButton) {
-    let selectedIndexPath = filtersTableView.indexPathForCell(sender.superview?.superview as! UITableViewCell)!
-    
+  func toggleButtonAtIndexPath(selectedIndexPath: NSIndexPath){
     if collapsedState[selectedIndexPath.section] {
       collapseOrExpandSection(selectedIndexPath.section, setCollapsed: false, reloadSection: true)
     } else {
@@ -190,6 +188,12 @@ class FiltersViewController: UIViewController {
       }
       
     }
+  }
+  
+  @IBAction func buttonPressed(sender: UIButton) {
+    let selectedIndexPath = filtersTableView.indexPathForCell(sender.superview?.superview as! UITableViewCell)!
+    
+    toggleButtonAtIndexPath(selectedIndexPath)
   }
   
   
@@ -380,7 +384,6 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     
-    
     switch FiltersSection(rawValue: indexPath.section)! {
     case .Deals:
       let cell = filtersTableView.dequeueReusableCellWithIdentifier(switchCellReuseIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
@@ -394,13 +397,10 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
       if self.collapsedState[indexPath.section]{
         cell.buttonLabel.text = self.getSelectedRadiusTitleForSwitchStates(self.switchStates!)
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-          cell.buttonButton.titleLabel!.text = "A"
+          cell.buttonButton.setImage(UIImage(named: "ExpandArrow"), forState: UIControlState.Normal)
         })
       } else {
         cell.buttonLabel.text = RadiusSection(rawValue: indexPath.row)?.title()
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-          cell.buttonButton.titleLabel!.text = "X"
-        })
       }
       cell.on = switchStates?[indexPath] ?? false
       return cell
@@ -410,13 +410,10 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
       if self.collapsedState[indexPath.section]{
         cell.buttonLabel.text = self.getSelectedSortByForSwitchStates(self.switchStates!).title()
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-          cell.buttonButton.titleLabel!.text = "A"
+          cell.buttonButton.setImage(UIImage(named: "ExpandArrow"), forState: UIControlState.Normal)
         })
       } else {
         cell.buttonLabel.text = YelpSortMode(rawValue: indexPath.row)?.title()
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-          cell.buttonButton.titleLabel!.text = "X"
-        })
       }
       
       cell.on = switchStates?[indexPath] ?? false
@@ -451,5 +448,9 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource {
     }
     tableView.deselectRowAtIndexPath(indexPath, animated: false)
     
+    if filtersTableView.cellForRowAtIndexPath(indexPath) is ButtonTableViewCell {
+      toggleButtonAtIndexPath(indexPath)
+    }
   }
+  
 }

@@ -37,6 +37,8 @@ class SwitchTableViewCell: UITableViewCell {
   override func awakeFromNib() {
     super.awakeFromNib()
     
+    selectSwitch.onTintColor = AppearanceHelper.colorFromHexString("#c41200")
+    
     selectionStyle = UITableViewCellSelectionStyle.None
     
     layoutMargins = UIEdgeInsetsZero

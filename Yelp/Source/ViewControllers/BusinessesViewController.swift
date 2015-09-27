@@ -37,7 +37,7 @@ class BusinessesViewController: UIViewController{
   
   override func loadView() {
     super.loadView()
-    
+
     //    setupSearchController()
     setupSearchBar()
     setupNavigationItem(navigationItem)
@@ -50,6 +50,7 @@ class BusinessesViewController: UIViewController{
     searchForBusinessesWithFilter(currentFilter)
     setupTableView(businessesTableView)
     setupMapView()
+    
   }
   
   override func didReceiveMemoryWarning() {
@@ -82,8 +83,7 @@ class BusinessesViewController: UIViewController{
     tableView.delegate = self
     tableView.dataSource = self
     tableView.estimatedRowHeight = 100
-    tableView.rowHeight = UITableViewAutomaticDimension
-    
+    tableView.rowHeight = UITableViewAutomaticDimension    
   }
   
   func setupSearchController() {
@@ -209,6 +209,33 @@ class BusinessesViewController: UIViewController{
     return foundBusinesses
   }
   
+  func reloadMapData(businesses: [Business]){
+    businessesMapView.removeAnnotations(businessesMapView.annotations)
+    
+    for business in businesses {
+      if business.coordinate == nil {
+        CLGeocoder().geocodeAddressString(business.geocodeAddress!) { (placemarks: [CLPlacemark]?, error: NSError?) -> Void in
+          
+          if let error = error{
+            print((error.localizedDescription))
+          }
+          if let placemark = placemarks?[0] {
+            business.placemark = placemark
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+              self.businessesMapView.addAnnotation(MKPlacemark(placemark: placemark))
+            })
+          }
+        }
+      } else {
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = business.coordinate!
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+          self.businessesMapView.addAnnotation(annotation)
+        })
+      }
+    }
+  }
+  
   // MARK: - Navigation
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -304,33 +331,8 @@ extension BusinessesViewController: UISearchBarDelegate {
 
 extension BusinessesViewController: MKMapViewDelegate {
   
-  func reloadMapData(businesses: [Business]){
-    businessesMapView.removeAnnotations(businessesMapView.annotations)
-    
-    for business in businesses {
-      if business.coordinate == nil {
-        CLGeocoder().geocodeAddressString(business.geocodeAddress!) { (placemarks: [CLPlacemark]?, error: NSError?) -> Void in
-          
-          if let error = error{
-            print((error.localizedDescription))
-          }
-          if let placemark = placemarks?[0] {
-            business.placemark = placemark
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-              self.businessesMapView.addAnnotation(MKPlacemark(placemark: placemark))
-            })
-          }
-        }
-      } else {
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = business.coordinate!
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-          self.businessesMapView.addAnnotation(annotation)
-        })
-      }
-      
-      
-    }
+  func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+//    UIAlertView(title: "tapped Annotation!", message: view.annotation!.title!, delegate: nil, cancelButtonTitle: "OK").show()
   }
   
 }
