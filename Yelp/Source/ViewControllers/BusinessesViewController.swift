@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MapKit
 
 class BusinessesViewController: UIViewController{
   
@@ -17,7 +18,9 @@ class BusinessesViewController: UIViewController{
   
   // MARK: - Storyboard Objects
   
-  @IBOutlet weak var businessesTableView: UITableView!
+
+  @IBOutlet weak var businessesMapView: MKMapView!
+  @IBOutlet var businessesTableView: UITableView!
   @IBOutlet weak var businessTableViewBottomToSuperConstraint: NSLayoutConstraint!
   
   // MARK: - Properties
@@ -28,11 +31,14 @@ class BusinessesViewController: UIViewController{
   var searchBar: UISearchBar!
   var currentFilter = Filter()
   var newBusinessCount: Int = 0
+
   
   // MARK: - Lifecycle
   
   override func loadView() {
     super.loadView()
+    
+    
     
     //    setupSearchController()
     setupSearchBar()
@@ -45,6 +51,7 @@ class BusinessesViewController: UIViewController{
     setupChangeTableViewFrameWhenKeyboardIsShownOrHides()
     searchForBusinessesWithFilter(currentFilter)
     setupTableView(businessesTableView)
+    setupMapView()
   }
   
   override func didReceiveMemoryWarning() {
@@ -52,6 +59,10 @@ class BusinessesViewController: UIViewController{
   }
   
   // MARK: - Initialization
+  
+  func setupMapView() {
+    businessesMapView.hidden = true
+  }
   
   func setupChangeTableViewFrameWhenKeyboardIsShownOrHides(){
     NSNotificationCenter.defaultCenter().addObserver(self, selector: "willShowKeyboard:", name: UIKeyboardDidShowNotification, object: nil)
@@ -87,6 +98,7 @@ class BusinessesViewController: UIViewController{
   
   func setupNavigationItem(navigationItem: UINavigationItem) {
     self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(title: "Filter", style: .Plain, target: self, action: "filterButtonClicked:")
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "Map", style: .Plain, target: self, action: "mapButtonClicked:")
   }
   
   // MARK: - Behavior
@@ -130,6 +142,21 @@ class BusinessesViewController: UIViewController{
     performSegueWithIdentifier(filtersViewSegueIdentifier, sender: self)
   }
   
+  func mapButtonClicked(sender: BusinessesViewController) {
+    var buttonTitle = self.navigationItem.rightBarButtonItem?.title
+    
+    if (buttonTitle == "Map"){
+      buttonTitle = "List"
+      UIView.transitionFromView(businessesTableView, toView: businessesMapView, duration: 1.0, options: [.TransitionFlipFromLeft, .ShowHideTransitionViews], completion: nil)
+    } else {
+      buttonTitle = "Map"
+      UIView.transitionFromView(businessesMapView, toView: businessesTableView, duration: 1.0, options: [.TransitionFlipFromRight, .ShowHideTransitionViews], completion: nil)
+    }
+    
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: buttonTitle, style: .Plain, target: self, action: "mapButtonClicked:")
+    
+  }
+  
   func searchForBusinessesWithFilter(filter: Filter) {
     
     Business.searchWithTerm("restaurants", sort: filter.sort, categories: filter.categories, deals: filter.deals, radius: filter.radius, limit: nil, offset: nil) { (businesses: [Business]!, error: NSError!) -> Void in
@@ -143,7 +170,6 @@ class BusinessesViewController: UIViewController{
           self.businessesTableView.reloadData()
         })
       }
-
     }
   }
   

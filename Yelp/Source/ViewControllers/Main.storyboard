@@ -109,11 +109,18 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="mf6-ic-FZa">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="mf6-ic-FZa" secondAttribute="bottom" id="CSV-ai-2Bc"/>
+                            <constraint firstItem="mf6-ic-FZa" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="DlL-LA-q44"/>
+                            <constraint firstItem="mf6-ic-FZa" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="XcB-J8-COY"/>
                             <constraint firstAttribute="trailing" secondItem="oue-fR-74y" secondAttribute="trailing" id="kpQ-kQ-3kL"/>
                             <constraint firstItem="oue-fR-74y" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="sbM-rN-aZa"/>
+                            <constraint firstAttribute="trailing" secondItem="mf6-ic-FZa" secondAttribute="trailing" id="wSk-fH-hxD"/>
                             <constraint firstItem="oue-fR-74y" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="xZX-Vy-oX0"/>
                             <constraint firstItem="oue-fR-74y" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="xab-lh-lRd"/>
                         </constraints>
@@ -121,7 +128,8 @@
                     <navigationItem key="navigationItem" id="INa-kh-VHS"/>
                     <connections>
                         <outlet property="businessTableViewBottomToSuperConstraint" destination="xZX-Vy-oX0" id="0vn-R8-Xfx"/>
-                        <outlet property="businessesTableView" destination="oue-fR-74y" id="dPV-qY-IW7"/>
+                        <outlet property="businessesMapView" destination="mf6-ic-FZa" id="tjM-jT-77b"/>
+                        <outlet property="businessesTableView" destination="oue-fR-74y" id="0DF-Rv-RqN"/>
                         <segue destination="dDJ-Wa-sYh" kind="modal" identifier="com.randy.FiltersViewSegue" id="m4Z-i2-lk6"/>
                     </connections>
                 </viewController>
