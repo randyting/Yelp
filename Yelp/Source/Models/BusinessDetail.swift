@@ -9,10 +9,12 @@
 import UIKit
 
 class BusinessDetail: NSObject {
-
+  
   var id: String?
   var name: String?
   var imageUrl: String?
+  var reviewExcerpt: String?
+  var reviewerName: String?
   
   
   
@@ -20,6 +22,14 @@ class BusinessDetail: NSObject {
     id = dictionary["id"] as? String
     name = dictionary["name"] as? String
     imageUrl = dictionary["image_url"] as? String
+    
+    let reviews = dictionary["reviews"] as? NSArray
+    if reviews != nil {
+      let reviewDictionary = reviews![0] as? NSDictionary
+      self.reviewExcerpt = reviewDictionary!["excerpt"] as? String
+      self.reviewerName = (reviewDictionary!["user"] as? NSDictionary)!["name"] as? String
+    }
+
   }
   
   class func getDetailsForBusinessID(id: String, completion: ([String: AnyObject]!, NSError!) -> Void) {

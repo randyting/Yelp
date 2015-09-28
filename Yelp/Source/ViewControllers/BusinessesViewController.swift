@@ -15,6 +15,7 @@ class BusinessesViewController: UIViewController{
   
   let businessReusableCellIdentifier = "BusinessCell"
   let filtersViewSegueIdentifier = "com.randy.FiltersViewSegue"
+  let detailsViewSegueIdentifier = "com.randy.DetailsViewSegue"
   
   // MARK: - Storyboard Objects
   
@@ -32,7 +33,6 @@ class BusinessesViewController: UIViewController{
   var currentFilter = Filter()
   var newBusinessCount: Int = 0
   var currentLocation = CLLocationCoordinate2DMake(37.785771,-122.406165)
-  var businessDetail: BusinessDetail!
   
   // MARK: - Lifecycle
   
@@ -51,15 +51,6 @@ class BusinessesViewController: UIViewController{
     searchForBusinessesWithFilter(currentFilter)
     setupTableView(businessesTableView)
     setupMapView()
-    
-//    BusinessDetail.getDetailsForBusinessID("byobw-bring-your-own-big-wheel-race-san-francisco") { (details: [String : AnyObject]!, error: NSError!) -> Void in
-//      if let error = error {
-//        print((error.localizedDescription))
-//      } else {
-//        self.businessDetail = BusinessDetail(dictionary: details)
-//        print((self.businessDetail.imageUrl))
-//      }
-//    }
     
   }
   
@@ -251,9 +242,13 @@ class BusinessesViewController: UIViewController{
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if segue.identifier == filtersViewSegueIdentifier {
       ((segue.destinationViewController as! UINavigationController).topViewController as! FiltersViewController).delegate = self
+    } else if segue.identifier == detailsViewSegueIdentifier {
+      let cell = sender as! BusinessTableViewCell
+      let indexPath = businessesTableView.indexPathForCell(cell)
+      let vc = segue.destinationViewController as! BusinessDetailViewController
+      vc.businessID = searchedBusinesses[(indexPath?.row)!].id!
     }
   }
-  
   
 }
 
@@ -281,6 +276,10 @@ extension BusinessesViewController:  UITableViewDelegate, UITableViewDataSource 
       return searchedBusinesses.count
     }
     return 0
+  }
+  
+  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    businessesTableView.deselectRowAtIndexPath(indexPath, animated: true)
   }
   
 }
