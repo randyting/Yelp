@@ -38,7 +38,6 @@ class BusinessDetail: NSObject {
     let snippetImageURLString = dictionary["image_url"] as? String
     if snippetImageURLString != nil {
       snippetImageUrl = NSURL(string: snippetImageURLString!)!
-      print((snippetImageUrl))
     } else {
       snippetImageUrl = nil
     }
