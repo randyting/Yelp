@@ -27,27 +27,10 @@ class BusinessDetailViewController: UIViewController {
         print((error.localizedDescription))
       } else {
         self.businessDetail = BusinessDetail(dictionary: details)
-        print((self.businessDetail?.reviewExcerpt))
         self.carousel.reloadData()
       }
     }
-    // Do any additional setup after loading the view.
   }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
-  
-  /*
-  // MARK: - Navigation
-  
-  // In a storyboard-based application, you will often want to do a little preparation before navigation
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-  // Get the new view controller using segue.destinationViewController.
-  // Pass the selected object to the new view controller.
-  }
-  */
   
 }
 
@@ -59,10 +42,6 @@ extension BusinessDetailViewController: iCarouselDelegate, iCarouselDataSource {
     if (view == nil)
     {
       reviewView = CarouselReviewView(frame:CGRect(x:0, y:0, width:super.view.frame.width-100, height:super.view.frame.height - 100))
-      
-//      if let reviewExcerpts = businessDetail?.reviewExcerpts {
-//        reviewView.reviewExcerptLabel.text = reviewExcerpts[index]
-//      }
     }
     else
     {
@@ -70,7 +49,41 @@ extension BusinessDetailViewController: iCarouselDelegate, iCarouselDataSource {
     }
     
     reviewView.reviewExcerptLabel.text = businessDetail?.reviewExcerpt
-    reviewView.ReviewerName.text = businessDetail?.reviewerName
+    reviewView.reviewerName.text = businessDetail?.reviewerName
+    reviewView.reviewerProfileImage.setImageWithURL(businessDetail?.reviewerImageUrl)
+    
+    reviewView.snippetImage.setImageWithURL(businessDetail?.snippetImageUrl)
+    reviewView.snippetText.text = businessDetail?.snippetText
+    reviewView.businessName.text = businessDetail?.name
+    
+    switch index {
+    case 0:
+      reviewView.reviewExcerptLabel.hidden = true
+      reviewView.reviewerName.hidden = true
+      reviewView.reviewerProfileImage.hidden = true
+      reviewView.snippetImage.hidden = false
+      reviewView.snippetText.hidden = false
+      reviewView.businessName.hidden = false
+      reviewView.transparentBackground.hidden = false
+    case 1:
+      reviewView.reviewExcerptLabel.hidden = false
+      reviewView.reviewerName.hidden = false
+      reviewView.reviewerProfileImage.hidden = true
+      reviewView.snippetImage.hidden = true
+      reviewView.snippetText.hidden = true
+      reviewView.businessName.hidden = true
+      reviewView.transparentBackground.hidden = true
+    case 2:
+      reviewView.reviewExcerptLabel.hidden = true
+      reviewView.reviewerName.hidden = true
+      reviewView.reviewerProfileImage.hidden = false
+      reviewView.snippetImage.hidden = true
+      reviewView.snippetText.hidden = true
+      reviewView.businessName.hidden = true
+      reviewView.transparentBackground.hidden = true
+    default: break
+      
+    }
     
     return reviewView
   }

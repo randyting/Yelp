@@ -13,7 +13,15 @@ class CarouselReviewView: UIView {
   @IBOutlet var contentView: UIView!
 
   @IBOutlet weak var reviewExcerptLabel: UILabel!
-  @IBOutlet weak var ReviewerName: UILabel!
+
+  @IBOutlet weak var reviewerName: UILabel!
+  @IBOutlet weak var reviewerProfileImage: UIImageView!
+  
+  @IBOutlet weak var snippetImage: UIImageView!
+  @IBOutlet weak var snippetText: UILabel!
+  @IBOutlet weak var businessName: UILabel!
+  
+  @IBOutlet weak var transparentBackground: UIView!
   
   override init(frame: CGRect) { // for using CustomView in code
     super.init(frame: frame)
