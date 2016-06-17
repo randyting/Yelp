@@ -111,6 +111,11 @@ class YelpClient: BDBOAuth1RequestOperationManager {
   
   func retrieveBusinessDetailsForID (id: String, completion: ([String: AnyObject]!, NSError!) -> Void) -> AFHTTPRequestOperation {
     
+    guard let id = stringWithoutUTFEightAccentsFromString(id) else {
+      completion(nil, NSError(domain: "Not a valid string", code: 0, userInfo: nil))
+      return AFHTTPRequestOperation()
+    }
+    
     return self.GET("business/" + id, parameters: nil, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
       let details = response as? [String: AnyObject]
       if details != nil {
@@ -119,6 +124,16 @@ class YelpClient: BDBOAuth1RequestOperationManager {
       }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
         completion(nil, error)
     })
+  }
+  
+  private func stringWithoutUTFEightAccentsFromString(stringToConvert: String) -> String? {
+    
+    if let stringAsData = stringToConvert.dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true) {
+      return String(data: stringAsData, encoding: NSASCIIStringEncoding)
+    } else {
+      return nil
+    }
+    
   }
   
 }
