@@ -67,8 +67,8 @@ class BusinessesViewController: UIViewController{
   }
   
   func setupChangeTableViewFrameWhenKeyboardIsShownOrHides(){
-    NSNotificationCenter.defaultCenter().addObserver(self, selector: "willShowKeyboard:", name: UIKeyboardDidShowNotification, object: nil)
-    NSNotificationCenter.defaultCenter().addObserver(self, selector: "willHideKeyboard:", name: UIKeyboardDidHideNotification, object: nil)
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "willShowKeyboard:", name: UIKeyboardWillShowNotification, object: nil)
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "willHideKeyboard:", name: UIKeyboardWillHideNotification, object: nil)
   }
   
   func setupSearchBar() {
